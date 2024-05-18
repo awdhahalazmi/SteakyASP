@@ -1,0 +1,6 @@
+@SteakyAPi_HostAddress = http://localhost:5073
+
+GET {{SteakyAPi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
