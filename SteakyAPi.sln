@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteakyAPi", "SteakyAPi\SteakyAPi.csproj", "{F67ED7D3-BC70-468A-A3B2-089381B24146}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreakyAPi", "SteakyAPi\StreakyAPi.csproj", "{F67ED7D3-BC70-468A-A3B2-089381B24146}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreakyFront", "StreakyFront\StreakyFront.csproj", "{4DA574C9-2680-4D7E-9AE8-2C1A7DF4BD43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreakyFrontWeb", "StreakyFrontWeb\StreakyFrontWeb.csproj", "{8CEDD311-B2C2-43D5-A8D9-4C6377786DF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F67ED7D3-BC70-468A-A3B2-089381B24146}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F67ED7D3-BC70-468A-A3B2-089381B24146}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F67ED7D3-BC70-468A-A3B2-089381B24146}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DA574C9-2680-4D7E-9AE8-2C1A7DF4BD43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DA574C9-2680-4D7E-9AE8-2C1A7DF4BD43}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DA574C9-2680-4D7E-9AE8-2C1A7DF4BD43}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DA574C9-2680-4D7E-9AE8-2C1A7DF4BD43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CEDD311-B2C2-43D5-A8D9-4C6377786DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CEDD311-B2C2-43D5-A8D9-4C6377786DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CEDD311-B2C2-43D5-A8D9-4C6377786DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CEDD311-B2C2-43D5-A8D9-4C6377786DF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
