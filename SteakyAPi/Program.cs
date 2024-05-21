@@ -29,7 +29,7 @@ builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddDbContext<StreakyContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.LogTo(Console.WriteLine, LogLevel.Information);
 });
 
