@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using StreakyAPi.Model.Request;
+using StreakyAPi.Model.Streak;
 using System.Diagnostics.Metrics;
 using System.Net.NetworkInformation;
 
@@ -19,9 +20,10 @@ namespace StreakyAPi.Model
         public DbSet<Category> Categories { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
-
-
-
+        public DbSet<UserStreak> UserStreaks { get; set; }
+        public DbSet<Business> Businesses { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Streaks> Streaks { get; set; }
 
 
 
@@ -61,6 +63,34 @@ namespace StreakyAPi.Model
                 .WithMany(u => u.ReceivedFriendRequests)
                 .HasForeignKey(fr => fr.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserStreak>()
+                .HasOne(us => us.User)
+                .WithMany(u => u.UserStreaks)
+                .HasForeignKey(us => us.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserStreak>()
+                .HasOne(us => us.Streak)
+                .WithMany(s => s.UserStreaks)
+                .HasForeignKey(us => us.StreakId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Business>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.Businesses)
+                .HasForeignKey(b => b.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Streaks>()
+                .HasMany(s => s.Businsses)
+                .WithMany(b => b.Streaks)
+                .UsingEntity<Dictionary<string, object>>(
+                    "StreakBusiness",
+                    j => j.HasOne<Business>().WithMany().HasForeignKey("BusinessId"),
+                    j => j.HasOne<Streaks>().WithMany().HasForeignKey("StreakId"));
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

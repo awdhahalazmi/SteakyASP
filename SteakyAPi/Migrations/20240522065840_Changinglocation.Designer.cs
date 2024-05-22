@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreakyAPi.Model;
 
@@ -11,9 +12,11 @@ using StreakyAPi.Model;
 namespace StreakyAPi.Migrations
 {
     [DbContext(typeof(StreakyContext))]
-    partial class StreakyContextModelSnapshot : ModelSnapshot
+    [Migration("20240522065840_Changinglocation")]
+    partial class Changinglocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace StreakyAPi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("StreakBusiness", b =>
-                {
-                    b.Property<int>("BusinessId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreakId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BusinessId", "StreakId");
-
-                    b.HasIndex("StreakId");
-
-                    b.ToTable("StreakBusiness");
-                });
 
             modelBuilder.Entity("StreakyAPi.Model.Business", b =>
                 {
@@ -177,65 +165,6 @@ namespace StreakyAPi.Migrations
                     b.ToTable("FriendRequests");
                 });
 
-            modelBuilder.Entity("StreakyAPi.Model.Streak.Streaks", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BusinessId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Streaks");
-                });
-
-            modelBuilder.Entity("StreakyAPi.Model.Streak.UserStreak", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("StreakId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StreakId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserStreaks");
-                });
-
             modelBuilder.Entity("StreakyAPi.Model.UserAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -276,6 +205,27 @@ namespace StreakyAPi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("StreakyAPi.Model.UserStreak", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("StreakDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserStreaks");
+                });
+
             modelBuilder.Entity("UserCategory", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -304,21 +254,6 @@ namespace StreakyAPi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserFriend");
-                });
-
-            modelBuilder.Entity("StreakBusiness", b =>
-                {
-                    b.HasOne("StreakyAPi.Model.Business", null)
-                        .WithMany()
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StreakyAPi.Model.Streak.Streaks", null)
-                        .WithMany()
-                        .HasForeignKey("StreakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("StreakyAPi.Model.Business", b =>
@@ -358,25 +293,6 @@ namespace StreakyAPi.Migrations
                     b.Navigation("Requester");
                 });
 
-            modelBuilder.Entity("StreakyAPi.Model.Streak.UserStreak", b =>
-                {
-                    b.HasOne("StreakyAPi.Model.Streak.Streaks", "Streak")
-                        .WithMany("UserStreaks")
-                        .HasForeignKey("StreakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StreakyAPi.Model.UserAccount", "User")
-                        .WithMany("UserStreaks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streak");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("StreakyAPi.Model.UserAccount", b =>
                 {
                     b.HasOne("StreakyAPi.Model.Gender", "Gender")
@@ -386,6 +302,17 @@ namespace StreakyAPi.Migrations
                         .IsRequired();
 
                     b.Navigation("Gender");
+                });
+
+            modelBuilder.Entity("StreakyAPi.Model.UserStreak", b =>
+                {
+                    b.HasOne("StreakyAPi.Model.UserAccount", "User")
+                        .WithMany("UserStreaks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UserCategory", b =>
@@ -426,11 +353,6 @@ namespace StreakyAPi.Migrations
             modelBuilder.Entity("StreakyAPi.Model.Category", b =>
                 {
                     b.Navigation("Businesses");
-                });
-
-            modelBuilder.Entity("StreakyAPi.Model.Streak.Streaks", b =>
-                {
-                    b.Navigation("UserStreaks");
                 });
 
             modelBuilder.Entity("StreakyAPi.Model.UserAccount", b =>
