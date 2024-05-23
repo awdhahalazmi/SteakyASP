@@ -1,0 +1,232 @@
+﻿@model StreakyFrontWeb.Models.Business
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Business</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #f0f2f5;
+            padding-top: 60px;
+        }
+
+            .sidebar img {
+                display: block;
+                margin: 20px auto;
+                width: 150px;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 10px 20px;
+                color: #4A148C;
+                text-decoration: none;
+            }
+
+                .sidebar a:hover {
+                    background: #e0dce3;
+                }
+
+            .sidebar .active {
+                background: #e0dce3;
+            }
+
+        .topbar {
+            width: calc(100% - 250px);
+            height: 60px;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .topbar .search-bar {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+            }
+
+                .topbar .search-bar input {
+                    width: 80%;
+                    padding: 5px 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+
+            .topbar .profile-info {
+                display: flex;
+                align-items: center;
+            }
+
+                .topbar .profile-info .profile-pic {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #e0dce3;
+                    margin-right: 10px;
+                }
+
+                .topbar .profile-info span {
+                    font-size: 16px;
+                    color: #4A148C;
+                    margin-right: 5px;
+                }
+
+                .topbar .profile-info .dropdown-icon {
+                    font-size: 12px;
+                    color: #6c757d;
+                }
+
+                .topbar .profile-info .notification-icon {
+                    position: relative;
+                }
+
+                    .topbar .profile-info .notification-icon img {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    .topbar .profile-info .notification-icon::after {
+                        content: '';
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        width: 10px;
+                        height: 10px;
+                        background-color: red;
+                        border-radius: 50%;
+                    }
+
+        .content {
+            margin-left: 270px;
+            padding-top: 80px;
+            padding: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #6a1b9a;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #4a148c;
+            }
+
+        .btn-secondary {
+            background-color: white;
+            color: #6a1b9a;
+            border: 1px solid #6a1b9a;
+        }
+
+            .btn-secondary:hover {
+                background-color: #f0f2f5;
+            }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="~/images/logo.png" alt="Logo">
+        <a href="#">Dashboard</a>
+        <a href="#">Streak List</a>
+        <a href="/Business/BusinessList" class="active">Business</a>
+        <a href="/secretDeal/list">Secret Deal</a>
+        <a href="#">Account</a>
+        <a href="#">Logout</a>
+    </div>
+    <div class="topbar">
+        <div class="search-bar">
+            <input type="text" placeholder="Search" />
+        </div>
+        <div class="profile-info">
+            <div class="profile-pic"></div>
+            <span>Admin</span>
+            <span class="dropdown-icon">&#x25BC;</span>
+            <div class="notification-icon">
+                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <h1>Add Business</h1>
+        <form method="post" action="@Url.Action("AddBusiness", "Business")">
+            <div class="form-group">
+                <label for="Name">Business Name</label>
+                <input type="text" class="form-control" id="Name" name="Name" required />
+            </div>
+            <div class="form-group">
+                <label for="Category">Category</label>
+                <select class="form-control" id="Category" name="Category" required>
+                    <option value="">Select Category</option>
+                    <option value="Coffee Shops">Coffee Shops</option>
+                    <option value="Retail Shops">Retail Shops</option>
+                    <option value="Leisure Activity">Leisure Activity</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ImageUrl">Insert Images</label>
+                <input type="text" class="form-control" id="ImageUrl" name="ImageUrl" required />
+            </div>
+            <div class="form-group">
+                <label for="Question">Question</label>
+                <input type="text" class="form-control" id="Question" name="Question" required />
+            </div>
+            <div class="form-group">
+                <label for="CorrectAnswer">Correct Answer</label>
+                <input type="text" class="form-control" id="CorrectAnswer" name="CorrectAnswer" required />
+            </div>
+            <div class="form-group">
+                <label for="WrongAnswer1">Wrong Answer 1</label>
+                <input type="text" class="form-control" id="WrongAnswer1" name="WrongAnswer1" required />
+            </div>
+            <div class="form-group">
+                <label for="WrongAnswer2">Wrong Answer 2</label>
+                <input type="text" class="form-control" id="WrongAnswer2" name="WrongAnswer2" required />
+            </div>
+            <div class="form-group">
+                <label for="Location1">Location 1</label>
+                <input type="text" class="form-control" id="Location1" name="Location1" required />
+            </div>
+            <div class="form-group">
+                <label for="Location2">Location 2</label>
+                <input type="text" class="form-control" id="Location2" name="Location2" required />
+            </div>
+            <div class="form-group button-group">
+                <a href="@Url.Action("Index", "Business")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

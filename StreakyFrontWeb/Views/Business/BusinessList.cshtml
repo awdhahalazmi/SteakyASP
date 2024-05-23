@@ -1,0 +1,224 @@
+﻿@model IEnumerable<StreakyFrontWeb.Models.Business>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .business-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .business-card img {
+                height: 50px;
+                margin-right: 20px;
+            }
+
+        .business-details {
+            flex-grow: 1;
+        }
+
+        .business-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary, .btn-primary {
+            background-color: #6a1b9a;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-primary:hover, .btn-primary:hover {
+                background-color: #4a148c;
+            }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #f0f2f5;
+            padding-top: 60px;
+        }
+
+            .sidebar img {
+                display: block;
+                margin: 20px auto;
+                width: 150px;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 10px 20px;
+                color: #4A148C;
+                text-decoration: none;
+            }
+
+                .sidebar a:hover {
+                    background: #e0dce3;
+                }
+
+            .sidebar .active {
+                background: #e0dce3;
+            }
+
+        .topbar {
+            width: calc(100% - 250px);
+            height: 60px;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .topbar .search-bar {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+            }
+
+                .topbar .search-bar input {
+                    width: 80%;
+                    padding: 5px 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+
+            .topbar .profile-info {
+                display: flex;
+                align-items: center;
+            }
+
+                .topbar .profile-info .profile-pic {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #e0dce3;
+                    margin-right: 10px;
+                }
+
+                .topbar .profile-info span {
+                    font-size: 16px;
+                    color: #4A148C;
+                    margin-right: 5px;
+                }
+
+                .topbar .profile-info .dropdown-icon {
+                    font-size: 12px;
+                    color: #6c757d;
+                }
+
+                .topbar .profile-info .notification-icon {
+                    position: relative;
+                }
+
+                    .topbar .profile-info .notification-icon img {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    .topbar .profile-info .notification-icon::after {
+                        content: '';
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        width: 10px;
+                        height: 10px;
+                        background-color: red;
+                        border-radius: 50%;
+                    }
+
+        .content {
+            margin-left: 270px;
+            padding-top: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+            .content .container {
+                width: 100%;
+                max-width: 900px;
+            }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="~/images/Logo.png" alt="Logo">
+        <a href="#">Dashboard</a>
+        <a href="#">Streak List</a>
+        <a href="/Business/BusinessList" class="active">Business</a>
+        <a href="/secretDeal/list">Secret Deal</a>
+        <a href="#">Account</a>
+        <a href="#">Logout</a>
+    </div>
+    <div class="topbar">
+        <div class="search-bar">
+            <input type="text" placeholder="Search" />
+        </div>
+        <div class="profile-info">
+            <div class="profile-pic"></div>
+            <span>Admin</span>
+            <span class="dropdown-icon">&#x25BC;</span>
+            <div class="notification-icon">
+                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">Business List</h1>
+                <a href="@Url.Action("AddBusiness", "Business")" class="btn btn-primary">Add Partner</a>
+            </div>
+            @foreach (var business in Model)
+            {
+                <div class="business-card">
+                    <div class="d-flex align-items-center">
+                        <img src="@business.LogoUrl" alt="@business.Name">
+                        <div class="business-details">
+                            <h2 class="h5 mb-1">@business.Name</h2>
+                            <p class="mb-0">@business.Categoryid</p>
+                            <p class="mb-0 text-muted">@business.Description</p>
+                        </div>
+                    </div>
+                    <div class="business-actions">
+                        <a href="@Url.Action("EditBusiness", "Business", new { id = business.id })" class="btn btn-primary">Edit</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
