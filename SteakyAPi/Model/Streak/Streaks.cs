@@ -10,6 +10,8 @@
         public DateTime EndDate { get; set; }
         public ICollection<Business> Businsses { get; set; } = new List<Business>();
         public ICollection<UserStreak> UserStreaks { get; set; } = new List<UserStreak>();
+        public ICollection<Reward> Rewards { get; set; } = new List<Reward>();  // Add this line
+
 
 
 

@@ -159,10 +159,10 @@ namespace StreakyAPi.Controllers
                 Locations = locations
             };
 
-            // Save the image to a designated folder
             var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", "businesses");
             Directory.CreateDirectory(directoryPath);
-            var filePath = Path.Combine(directoryPath, $"{Guid.NewGuid()}_{request.Image.FileName}");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), 
+                $"{Guid.NewGuid()}_{request.Image.FileName}");
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -200,6 +200,71 @@ namespace StreakyAPi.Controllers
         }
     }
 }
+
+//        [HttpPost("business")]
+//        public async Task<IActionResult> CreatePost([FromBody] BusinessRequest request)
+//        {
+//            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+//            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+//            if (user == null)
+//            {
+//                return NotFound("User not found");
+//            }
+
+//            var category = await _context.Categories.FindAsync(request.CategoryId);
+//            if (category == null)
+//            {
+//                return BadRequest("Invalid CategoryId");
+//            }
+
+//            var locations = _context.Locations.Where(l => request.LocationIds.Contains(l.Id)).ToList();
+//            if (locations.Count != request.LocationIds.Count)
+//            {
+//                return BadRequest("One or more LocationIds are invalid");
+//            }
+
+//            var business = new Business
+//            {
+//                Name = request.Name,
+//                Question = request.Question,
+//                CorrectAnswer = request.CorrectAnswer,
+//                WrongAnswer1 = request.WrongAnswer1,
+//                WrongAnswer2 = request.WrongAnswer2,
+//                CategoryId = request.CategoryId,
+//                Locations = locations,
+//                Image = request.ImageUrl // Set the image URL directly
+//            };
+
+//            _context.Businesses.Add(business);
+//            await _context.SaveChangesAsync();
+
+//            var response = new BusinessResponse
+//            {
+//                Id = business.Id,
+//                Name = business.Name,
+//                CategoryId = business.CategoryId,
+//                Image = business.Image,
+//                Question = business.Question,
+//                CorrectAnswer = business.CorrectAnswer,
+//                WrongAnswer1 = business.WrongAnswer1,
+//                WrongAnswer2 = business.WrongAnswer2,
+//                Locations = business.Locations.Select(l => new LocationResponse
+//                {
+//                    Id = l.Id,
+//                    Name = l.Name,
+//                    URL = l.URL,
+//                    Radius = l.Radius,
+//                    Latitude = l.Latitude,
+//                    Longitude = l.Longitude
+//                }).ToList(),
+//                CategoryName = category.Name
+//            };
+
+//            return Ok(response);
+//        }
+
+//    }
+//}
 //        [HttpPost("business")]
 //        public async Task<IActionResult> CreatePost(BusinessRequest request)
 //        {

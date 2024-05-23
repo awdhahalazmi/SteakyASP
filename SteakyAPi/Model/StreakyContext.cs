@@ -24,6 +24,8 @@ namespace StreakyAPi.Model
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Streaks> Streaks { get; set; }
+        public DbSet<Reward> Rewards { get; set; }
+
 
 
 
@@ -89,6 +91,18 @@ namespace StreakyAPi.Model
                     "StreakBusiness",
                     j => j.HasOne<Business>().WithMany().HasForeignKey("BusinessId"),
                     j => j.HasOne<Streaks>().WithMany().HasForeignKey("StreakId"));
+
+            modelBuilder.Entity<Reward>()
+                .HasOne(r => r.Streak)
+                .WithMany(s => s.Rewards)
+                .HasForeignKey(r => r.StreakId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reward>()
+                .HasOne(r => r.Business)
+                .WithMany(b => b.Rewards)
+                .HasForeignKey(r => r.BusinessId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }
