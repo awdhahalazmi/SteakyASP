@@ -12,16 +12,19 @@ namespace StreakyFrontWeb.Controllers
             new SecretDeal { Id = 2, DealDate = "2024-05-02", Deal = "New Branch Opening", Streaks = "10", Business = "Ananas" }
         };
 
+
         public IActionResult List()
         {
             return View(secretDeals);
         }
+
 
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
+
 
         [HttpPost]
         public IActionResult Add(SecretDeal secretDeal)

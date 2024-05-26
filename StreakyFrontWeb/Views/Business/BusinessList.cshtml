@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business List</title>
+
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -171,14 +173,17 @@
             }
     </style>
 </head>
+
+
+
 <body>
     <div class="sidebar">
         <img src="~/images/Logo.png" alt="Logo">
         <a href="#">Dashboard</a>
-        <a href="#">Streak List</a>
+        <a href="/streak/streaklist">Streak </a>
         <a href="/Business/BusinessList" class="active">Business</a>
         <a href="/secretDeal/list">Secret Deal</a>
-        <a href="#">Account</a>
+        <a href="/Account/profile">Account</a>
         <a href="#">Logout</a>
     </div>
     <div class="topbar">
@@ -194,12 +199,16 @@
             </div>
         </div>
     </div>
+
+
     <div class="content">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3">Business List</h1>
                 <a href="@Url.Action("AddBusiness", "Business")" class="btn btn-primary">Add Partner</a>
             </div>
+
+
             @foreach (var business in Model)
             {
                 <div class="business-card">
@@ -218,6 +227,9 @@
             }
         </div>
     </div>
+
+
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

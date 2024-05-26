@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Business</title>
+
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -13,7 +15,6 @@
             margin: 0;
             padding: 0;
         }
-
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -155,6 +156,9 @@
         }
     </style>
 </head>
+
+
+
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
@@ -162,10 +166,12 @@
         <a href="#">Streak List</a>
         <a href="/Business/BusinessList" class="active">Business</a>
         <a href="/secretDeal/list">Secret Deal</a>
+        <a href="#">Rewards/</a>
         <a href="#">Account</a>
         <a href="#">Logout</a>
+
     </div>
-    <div class="topbar">
+        <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
         </div>
@@ -178,6 +184,8 @@
             </div>
         </div>
     </div>
+
+
     <div class="content">
         <h1>Add Business</h1>
         <form method="post" action="@Url.Action("AddBusiness", "Business")">
@@ -194,6 +202,8 @@
                     <option value="Leisure Activity">Leisure Activity</option>
                 </select>
             </div>
+
+
             <div class="form-group">
                 <label for="ImageUrl">Insert Images</label>
                 <input type="text" class="form-control" id="ImageUrl" name="ImageUrl" required />
