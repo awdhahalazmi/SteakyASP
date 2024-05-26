@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StreakyAPi.Model;
 
@@ -11,9 +12,11 @@ using StreakyAPi.Model;
 namespace StreakyAPi.Migrations
 {
     [DbContext(typeof(StreakyContext))]
-    partial class StreakyContextModelSnapshot : ModelSnapshot
+    [Migration("20240522105712_StreaksAdded")]
+    partial class StreaksAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,36 +178,6 @@ namespace StreakyAPi.Migrations
                     b.HasIndex("RequesterId");
 
                     b.ToTable("FriendRequests");
-                });
-
-            modelBuilder.Entity("StreakyAPi.Model.Reward", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BusinessId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PointsClaimed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreakId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BusinessId");
-
-                    b.HasIndex("StreakId");
-
-                    b.ToTable("Rewards");
                 });
 
             modelBuilder.Entity("StreakyAPi.Model.Streak.Streaks", b =>
@@ -388,25 +361,6 @@ namespace StreakyAPi.Migrations
                     b.Navigation("Requester");
                 });
 
-            modelBuilder.Entity("StreakyAPi.Model.Reward", b =>
-                {
-                    b.HasOne("StreakyAPi.Model.Business", "Business")
-                        .WithMany("Rewards")
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StreakyAPi.Model.Streak.Streaks", "Streak")
-                        .WithMany("Rewards")
-                        .HasForeignKey("StreakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Business");
-
-                    b.Navigation("Streak");
-                });
-
             modelBuilder.Entity("StreakyAPi.Model.Streak.UserStreak", b =>
                 {
                     b.HasOne("StreakyAPi.Model.Streak.Streaks", "Streak")
@@ -470,8 +424,6 @@ namespace StreakyAPi.Migrations
             modelBuilder.Entity("StreakyAPi.Model.Business", b =>
                 {
                     b.Navigation("Locations");
-
-                    b.Navigation("Rewards");
                 });
 
             modelBuilder.Entity("StreakyAPi.Model.Category", b =>
@@ -481,8 +433,6 @@ namespace StreakyAPi.Migrations
 
             modelBuilder.Entity("StreakyAPi.Model.Streak.Streaks", b =>
                 {
-                    b.Navigation("Rewards");
-
                     b.Navigation("UserStreaks");
                 });
 
