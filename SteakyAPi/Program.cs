@@ -50,13 +50,13 @@ if (builder.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseHttpsRedirection();
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    FileProvider = new PhysicalFileProvider(
-//           Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
-//    RequestPath = "/Uploads"
-//});
+app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+    RequestPath = "/Uploads"
+});
 app.UseRouting();
 
 
