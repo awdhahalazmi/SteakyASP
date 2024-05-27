@@ -27,8 +27,8 @@ namespace StreakyFrontWeb.Controllers
         public IActionResult Profile()
         {
             return View();
-        } 
-        
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest request)
         {
@@ -64,7 +64,11 @@ namespace StreakyFrontWeb.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
-               
+
+
             }
+
+            return RedirectToAction("Login", "Account");
+        }
     }
 }
