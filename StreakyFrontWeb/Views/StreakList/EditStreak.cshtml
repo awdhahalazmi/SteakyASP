@@ -1,0 +1,394 @@
+﻿@model StreakyFrontWeb.Models.Streaks
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Streak</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #f0f2f5;
+            padding-top: 60px;
+        }
+
+        .sidebar img {
+            display: block;
+            margin: 20px auto;
+            width: 150px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px 20px;
+            color: #4A148C;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background: #e0dce3;
+        }
+
+        .sidebar .active {
+            background: #e0dce3;
+        }
+
+        .topbar {
+            width: calc(100% - 250px);
+            height: 60px;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .topbar .search-bar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .topbar .search-bar input {
+            width: 80%;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .topbar .profile-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar .profile-info .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e0dce3;
+            margin-right: 10px;
+        }
+
+        .topbar .profile-info span {
+            font-size: 16px;
+            color: #4A148C;
+            margin-right: 5px;
+        }
+
+        .topbar .profile-info .dropdown-icon {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .topbar .profile-info .notification-icon {
+            position: relative;
+        }
+
+        .topbar .profile-info .notification-icon img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .topbar .profile-info .notification-icon::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding-top: 80px;
+            padding: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #6a1b9a;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #4a148c;
+        }
+
+        .btn-secondary {
+            border: 1px solid #6a1b9a;
+            color: #6a1b9a;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f0f2f5;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="~/images/logo.png" alt="Logo">
+        <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+        <a href="@Url.Action("StreakList", "StreakList")" class="active">Streak List</a>
+        <a href="@Url.Action("BusinessList", "Business")">Business</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
+        <a href="@Url.Action("Logout", "Account")">Logout</a>
+    </div>
+    <div class="topbar">
+        <div class="search-bar">
+            <input type="text" placeholder="Search" />
+        </div>
+        <div class="profile-info">
+            <div class="profile-pic"></div>
+            <span>Admin</span>
+            <span class="dropdown-icon">&#x25BC;</span>
+            <div class="notification-icon">
+                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <h1>Edit Streak</h1>
+        <form method="post" action="@Url.Action("EditStreak", "Streak")">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <div class="form-group">
+                <label for="Title">Title</label>
+                <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <input type="text" class="form-control" id="Description" name="Description" value="@Model.Description" required />
+            </div>
+       @*      <div class="form-group">
+                <label for="BusinessId">Business</label>
+                <select class="form-control" id="BusinessId" name="BusinessId" required>
+                    <option value="">Select Business</option>
+                    @foreach (var business in ViewBag.Businesses)
+                    {
+                  //      <option value="@business.Id" @(Model.BusinessId == business.Id ? "selected" : "")>@business.Name</option>
+                    }
+                </select>
+            </div> *@
+            <div class="form-group">
+                <label for="StartDate">Start Date</label>
+                <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="form-group">
+                <label for="EndDate">End Date</label>
+                <input type="date" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="form-group button-group">
+                <a href="@Url.Action("StreakList", "StreakList")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
+@* 
+    first try WORKS
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Edit Streak</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            color: #4A4A4A;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .menu {
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #6f42c1;
+            cursor: pointer;
+        }
+
+        .menu-item.active {
+            color: #6f42c1;
+            background-color: #e7e6f9;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout a {
+            text-decoration: none;
+            color: #6f42c1;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px 40px;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4A4A4A;
+        }
+
+        .delete-button {
+            background-color: #ff4d4d;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #e60000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .save-button {
+            background-color: #6f42c1;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #5a32a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" placeholder="Search" />
+            </div>
+            <div class="menu">
+                <div class="menu-item">Streak List</div>
+                <div class="menu-item">Add Business</div>
+                <div class="menu-item">Our Partners</div>
+                <div class="menu-item">Account</div>
+            </div>
+            <div class="logout">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="header">
+                <h1>Edit</h1>
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            </div>
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="StreakDate">Streak Date</label>
+                    <input asp-for="StreakDate" type="date" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name">Business</label>
+                    <select asp-for="Name" class="form-control">
+                        <option value="Pick Yo">Pick Yo</option>
+                        <option value="Ananas">Ananas</option>
+                    </select>
+                </div>
+                <button type="submit" class="save-button">Save</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html> *@
