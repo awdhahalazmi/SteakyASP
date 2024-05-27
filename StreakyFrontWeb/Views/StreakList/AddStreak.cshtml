@@ -148,12 +148,15 @@
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
         <a href="@Url.Action("StreakList", "Streaklist")" class="active">Streak List</a>
         <a href="@Url.Action("BusinessList", "Business")">Business</a>
         <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
+
+
+
+
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -176,7 +179,7 @@
                 <label for="Description">Description</label>
                 <input type="text" class="form-control" id="Description" name="Description" required />
             </div>
-            @* <div class="form-group">
+             <div class="form-group">
                 <label for="BusinessId">Business</label>
                 <select class="form-control" id="BusinessId" name="BusinessId" required>
                     <option value="">Select Business</option>
@@ -185,7 +188,7 @@
                         <option value="@business.Id">@business.Name</option>
                     }
                 </select>
-            </div> *@
+            </div> 
             <div class="form-group">
                 <label for="StartDate">Start Date</label>
                 <input type="date" class="form-control" id="StartDate" name="StartDate" required />

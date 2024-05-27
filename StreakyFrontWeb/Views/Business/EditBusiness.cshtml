@@ -1,4 +1,4 @@
-﻿@model StreakyFrontWeb.Models.Business
+﻿@model StreakyAPi.Model.Business
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +13,6 @@
             margin: 0;
             padding: 0;
         }
-
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -105,17 +104,6 @@
             height: 20px;
         }
 
-        .topbar .profile-info .notification-icon::after {
-            content: '';
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            border-radius: 50%;
-        }
-
         .content {
             margin-left: 270px;
             padding-top: 80px;
@@ -130,30 +118,23 @@
             margin-bottom: 10px;
         }
 
-        .btn-primary, .btn-secondary {
-            background-color: #4A148C;
+        .btn-primary {
+            background-color: #6a1b9a;
             border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        .btn-primary:hover, .btn-secondary:hover {
-            background-color: #380a62;
+        .btn-primary:hover {
+            background-color: #4a148c;
         }
 
         .btn-secondary {
-            background-color: transparent;
-            border: 2px solid #4A148C;
-            color: #4A148C;
+            background-color: white;
+            color: #6a1b9a;
+            border: 1px solid #6a1b9a;
         }
 
         .btn-secondary:hover {
-            background-color: #4A148C;
-            color: white;
+            background-color: #f0f2f5;
         }
 
         .button-group {
@@ -164,12 +145,12 @@
 </head>
 <body>
     <div class="sidebar">
-        <img src="~/images/Logo.png" alt="Logo">
-        <a href="#">Dashboard</a>
-        <a href="#">Streak List</a>
-        <a href="#" class="active"> Business</a>
-        <a href="#">Secret Deal </a>
-        <a href="#">Account</a>
+        <img src="~/images/logo.png" alt="Logo">
+        <a href="StreakList/StreakList">Streak List</a>
+        <a href="/Business/BusinessList" class="active">Business</a>
+        <a href="/secretDeal/list">Secret Deal</a>
+        <a href="/Rewards/index">Rewards/</a>
+        <a href="/Account/profile">Account</a>
         <a href="#">Logout</a>
     </div>
     <div class="topbar">
@@ -180,15 +161,12 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
         </div>
     </div>
     <div class="content">
         <h1>Edit Business</h1>
         <form method="post" action="@Url.Action("EditBusiness", "Business")">
-            <input type="hidden" name="id" value="@Model.id" />
+            <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
                 <label for="Name">Business Name</label>
                 <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
@@ -202,17 +180,11 @@
                     <option value="Leisure Activity">Leisure Activity</option>
                 </select>
             </div>
+
+
             <div class="form-group">
-                <label for="Description">Description</label>
-                <input type="text" class="form-control" id="Description" name="Description" value="@Model.Description" required />
-            </div>
-            <div class="form-group">
-                <label for="LogoUrl">Logo URL</label>
-                <input type="text" class="form-control" id="LogoUrl" name="LogoUrl" value="@Model.LogoUrl" required />
-            </div>
-            <div class="form-group">
-                <label for="ImageUrl">Insert Images</label>
-                <input type="text" class="form-control" id="ImageUrl" name="ImageUrl" value="@Model.ImageUrl" required />
+                <label for="Image">Image</label>
+                <input type="text" class="form-control" id="Image" name="Image" value="@Model.Image" required />
             </div>
             <div class="form-group">
                 <label for="Question">Question</label>
@@ -232,18 +204,17 @@
             </div>
             <div class="form-group">
                 <label for="Location1">Location 1</label>
-                <input type="text" class="form-control" id="Location1" name="Location1" value="@Model.Location1" required />
+                <input type="text" class="form-control" id="Location1" name="Locations[0].Name" value="@Model.Locations.ElementAtOrDefault(0)?.Name" required />
             </div>
             <div class="form-group">
                 <label for="Location2">Location 2</label>
-                <input type="text" class="form-control" id="Location2" name="Location2" value="@Model.Location2" required />
+                <input type="text" class="form-control" id="Location2" name="Locations[1].Name" value="@Model.Locations.ElementAtOrDefault(1)?.Name" required />
             </div>
             <div class="form-group button-group">
-                <button type="submit" class="btn btn-primary">Save</button>
                 <a href="@Url.Action("BusinessList", "Business")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
 </body>
 </html>
-

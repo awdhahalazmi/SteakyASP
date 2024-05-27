@@ -1,4 +1,4 @@
-﻿@model StreakyFrontWeb.Models.Business
+﻿@model StreakyAPi.Model.Business
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,8 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Business</title>
-
-
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -15,6 +13,7 @@
             margin: 0;
             padding: 0;
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -106,17 +105,6 @@
                         height: 20px;
                     }
 
-                    .topbar .profile-info .notification-icon::after {
-                        content: '';
-                        position: absolute;
-                        top: -5px;
-                        right: -5px;
-                        width: 10px;
-                        height: 10px;
-                        background-color: red;
-                        border-radius: 50%;
-                    }
-
         .content {
             margin-left: 270px;
             padding-top: 80px;
@@ -156,22 +144,17 @@
         }
     </style>
 </head>
-
-
-
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="#">Dashboard</a>
-        <a href="#">Streak List</a>
+        <a href="StreakList/StreakList">Streak List</a>
         <a href="/Business/BusinessList" class="active">Business</a>
         <a href="/secretDeal/list">Secret Deal</a>
-        <a href="#">Rewards/</a>
-        <a href="#">Account</a>
-        <a href="#">Logout</a>
-
+        <a href="/Rewards/index">Rewards/</a>
+        <a href="/Account/profile">Account</a>
+        <a href="/Account/Login">Logout</a>
     </div>
-        <div class="topbar">
+    <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
         </div>
@@ -179,14 +162,10 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
         </div>
     </div>
-
-
     <div class="content">
+
         <h1>Add Business</h1>
         <form method="post" action="@Url.Action("AddBusiness", "Business")">
             <div class="form-group">
@@ -194,19 +173,17 @@
                 <input type="text" class="form-control" id="Name" name="Name" required />
             </div>
             <div class="form-group">
-                <label for="Category">Category</label>
-                <select class="form-control" id="Category" name="Category" required>
+                <label for="CategoryId">Category</label>
+                <select class="form-control" id="CategoryId" name="CategoryId" required>
                     <option value="">Select Category</option>
-                    <option value="Coffee Shops">Coffee Shops</option>
-                    <option value="Retail Shops">Retail Shops</option>
-                    <option value="Leisure Activity">Leisure Activity</option>
+                    <option value="1">Coffee Shops</option>
+                    <option value="2">Retail Shops</option>
+                    <option value="3">Leisure Activity</option>
                 </select>
             </div>
-
-
             <div class="form-group">
-                <label for="ImageUrl">Insert Images</label>
-                <input type="text" class="form-control" id="ImageUrl" name="ImageUrl" required />
+                <label for="Image">Image</label>
+                <input type="text" class="form-control" id="Image" name="Image" required />
             </div>
             <div class="form-group">
                 <label for="Question">Question</label>
@@ -226,14 +203,14 @@
             </div>
             <div class="form-group">
                 <label for="Location1">Location 1</label>
-                <input type="text" class="form-control" id="Location1" name="Location1" required />
+                <input type="text" class="form-control" id="Location1" name="Locations[0].Name" required />
             </div>
             <div class="form-group">
                 <label for="Location2">Location 2</label>
-                <input type="text" class="form-control" id="Location2" name="Location2" required />
+                <input type="text" class="form-control" id="Location2" name="Locations[1].Name" required />
             </div>
             <div class="form-group button-group">
-                <a href="@Url.Action("Index", "Business")" class="btn btn-secondary">Cancel</a>
+                <a href="@Url.Action("BusinessList", "Business")" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>

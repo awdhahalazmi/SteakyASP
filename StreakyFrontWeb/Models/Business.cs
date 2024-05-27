@@ -15,7 +15,7 @@
         public string WrongAnswer2 { get; set; }
         public string Location1 { get; set; }
         public string Location2 { get; set; }
-        }
-
     }
+
+}
 

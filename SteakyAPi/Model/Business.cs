@@ -15,8 +15,6 @@ namespace StreakyAPi.Model
         public ICollection<Location> Locations { get; set; } = new List<Location>();
         public ICollection<Streaks> Streaks { get; set; } = new List<Streaks>();
         public ICollection<Reward> Rewards { get; set; } = new List<Reward>();  
-
-
         public Category Category { get; set; }
     }
 }
