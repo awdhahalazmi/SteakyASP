@@ -1,0 +1,198 @@
+﻿@model IEnumerable<StreakyFrontWeb.Models.Streaks>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streak List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #f0f2f5;
+            padding-top: 60px;
+        }
+
+            .sidebar img {
+                display: block;
+                margin: 20px auto;
+                width: 150px;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 10px 20px;
+                color: #4A148C;
+                text-decoration: none;
+            }
+
+                .sidebar a:hover {
+                    background: #e0dce3;
+                }
+
+            .sidebar .active {
+                background: #e0dce3;
+            }
+
+        .topbar {
+            width: calc(100% - 250px);
+            height: 60px;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .topbar .search-bar {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+            }
+
+                .topbar .search-bar input {
+                    width: 80%;
+                    padding: 5px 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+
+            .topbar .profile-info {
+                display: flex;
+                align-items: center;
+            }
+
+                .topbar .profile-info .profile-pic {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #e0dce3;
+                    margin-right: 10px;
+                }
+
+                .topbar .profile-info span {
+                    font-size: 16px;
+                    color: #4A148C;
+                    margin-right: 5px;
+                }
+
+                .topbar .profile-info .dropdown-icon {
+                    font-size: 12px;
+                    color: #6c757d;
+                }
+
+                .topbar .profile-info .notification-icon {
+                    position: relative;
+                }
+
+                    .topbar .profile-info .notification-icon img {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    .topbar .profile-info .notification-icon::after {
+                        content: '';
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        width: 10px;
+                        height: 10px;
+                        background-color: red;
+                        border-radius: 50%;
+                    }
+
+        .content {
+            margin-left: 270px;
+            padding-top: 80px;
+            padding: 20px;
+        }
+
+        .streak-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .streak-details {
+            flex-grow: 1;
+        }
+
+        .streak-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary, .btn-secondary {
+            background-color: #6a1b9a;
+            border: none;
+        }
+
+            .btn-primary:hover, .btn-secondary:hover {
+                background-color: #4a148c;
+            }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="~/images/logo.png" alt="Logo">
+        <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
+        <a href="@Url.Action("StreakList", "Streaklist")" class="active">Streak List</a>
+        <a href="@Url.Action("BusinessList", "Business")">Business</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
+        <a href="@Url.Action("Logout", "Account")">Logout</a>
+    </div>
+    <div class="topbar">
+        <div class="search-bar">
+            <input type="text" placeholder="Search" />
+        </div>
+        <div class="profile-info">
+            <div class="profile-pic"></div>
+            <span>Admin</span>
+            <span class="dropdown-icon">&#x25BC;</span>
+            <div class="notification-icon">
+                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Streak List</h1>
+            <a href="@Url.Action("AddStreak", "StreakList")" class="btn btn-primary">Add Streak</a>
+        </div>
+        @foreach (var streak in Model)
+        {
+            <div class="streak-card">
+                <div class="streak-details">
+                    <h2 class="h5 mb-1">@streak.Title</h2>
+                    <p class="mb-0">@streak.Description</p>
+                    <p class="mb-0 text-muted">Business: @streak.BusinessId</p>
+                    <p class="mb-0 text-muted">Start Date: @streak.StartDate.ToString("yyyy-MM-dd")</p>
+                    <p class="mb-0 text-muted">End Date: @streak.EndDate.ToString("yyyy-MM-dd")</p>
+                </div>
+                <div class="streak-actions">
+                    <a href="@Url.Action("EditStreak", "StreakList", new { id = streak.Id })" class="btn btn-secondary">Edit</a>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

@@ -31,15 +31,23 @@
             margin-top: 50px;
         }
 
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
+        .profile {
             width: 100%;
             max-width: 1200px;
             padding: 20px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
         }
 
         .profile-info {
@@ -82,12 +90,7 @@
 
         .profile-body {
             width: 100%;
-            max-width: 1200px;
-            padding: 20px;
             margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
             .profile-body .info-group {
@@ -185,28 +188,20 @@
                         height: 20px;
                     }
 
-                    .topbar .profile-info .notification-icon::after {
-                        content: '';
-                        position: absolute;
-                        top: -5px;
-                        right: -5px;
-                        width: 10px;
-                        height: 10px;
-                        background-color: red;
-                        border-radius: 50%;
-                    }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
-        <img src="StreakyAPi/uplods/2/logo.png" alt="Logo">
-        <a href="#" class="active">Dashboard</a>
-        <a href="#">Streak List</a>
-        <a href="#">Add Business</a>
-        <a href="#">Our Partners</a>
-        <a href="#">Account</a>
-        <a href="#">Logout</a>
+        <img src="~/images/Logo.png" alt="Logo">
+        <a href="@Url.Action("Index", "Dashboard")" class="active">Dashboard</a>
+        <a href="@Url.Action("StreakList", "StreakList")">Streak List</a>
+        <a href="@Url.Action("BusinessList", "Business")"> Business</a>
+        <a href="@Url.Action("Index", "Rewards")">Rewards</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
+        <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
+
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -215,30 +210,31 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
+
         </div>
     </div>
+
     <div class="container">
-        <div class="profile-header">
-            <div class="profile-info">
-                <div class="profile-pic"></div>
-                <div class="profile-details">
-                    <h2>Admin</h2>
+        <div class="profile">
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="profile-pic"></div>
+                    <div class="profile-details">
+                        <h2>Admin</h2>
+                        <span>Admin@gmail.com</span>
+                    </div>
+                </div>
+                <a href="#" class="edit-link">Edit</a>
+            </div>
+            <div class="profile-body">
+                <div class="info-group">
+                    <span>Name</span>
+                    <span>Admin</span>
+                </div>
+                <div class="info-group">
+                    <span>Email</span>
                     <span>Admin@gmail.com</span>
                 </div>
-            </div>
-            <a href="#" class="edit-link">Edit</a>
-        </div>
-        <div class="profile-body">
-            <div class="info-group">
-                <span>Name</span>
-                <span>Admin</span>
-            </div>
-            <div class="info-group">
-                <span>Email</span>
-                <span>Admin@gmail.com</span>
             </div>
         </div>
     </div>
