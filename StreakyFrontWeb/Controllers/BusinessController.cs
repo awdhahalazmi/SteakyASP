@@ -1,25 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StreakyFrontWeb.Models;
+using StreakyAPi.Model;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StreakyFrontWeb.Controllers
 {
     public class BusinessController : Controller
     {
-        private static List<Business> businesses = new List<Business>
+        private static List<Business> _businesses = new List<Business>
         {
-            new Business { id = 1, Name = "Cinescape", Categoryid = "1", Description = "Entertainment", LogoUrl = "~/images/c.jpg", ImageUrl = "https://uniguest.com/wp-content/uploads/2022/08/Cinescape.png", Question = "Sample Question", CorrectAnswer = "Correct Answer", WrongAnswer1 = "Wrong Answer 1", WrongAnswer2 = "Wrong Answer 2", Location1 = "Location 1", Location2 = "Location 2" }
+            new Business { Id = 1, Name = "Coffee Shop", CategoryId = 1, Image = "https://via.placeholder.com/50", Question = "What is the best coffee?", CorrectAnswer = "Espresso", WrongAnswer1 = "Latte", WrongAnswer2 = "Cappuccino" },
+            new Business { Id = 2, Name = "Retail Shop", CategoryId = 2, Image = "https://via.placeholder.com/50", Question = "What is the best product?", CorrectAnswer = "Shoes", WrongAnswer1 = "Bags", WrongAnswer2 = "Clothes" }
         };
 
         public IActionResult BusinessList()
         {
-            return View(businesses);
+            return View(_businesses);
         }
 
-        [HttpGet]
         public IActionResult AddBusiness()
         {
-            return View();
+            ViewBag.Title = "Add Business";
+            ViewBag.Action = "AddBusiness";
+            ViewBag.Categories = new List<Category>
+                {
+                    new Category { Id = 1, Name = "Coffee Shops" },
+                    new Category { Id = 2, Name = "Retail Shops" },
+                    new Category { Id = 3, Name = "Leisure Activity" }
+                };
+            return View("AddBusiness");
         }
 
         [HttpPost]
@@ -27,22 +36,29 @@ namespace StreakyFrontWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                business.id = businesses.Count + 1;
-                businesses.Add(business);
-                return RedirectToAction("BusinessList");
+                business.Id = _businesses.Max(b => b.Id) + 1;
+                _businesses.Add(business);
+                return RedirectToAction(nameof(BusinessList));
             }
-            return View(business);
+            return View("AddEditBusiness", business);
         }
 
-        [HttpGet]
         public IActionResult EditBusiness(int id)
         {
-            var business = businesses.Find(b => b.id == id);
+            var business = _businesses.FirstOrDefault(b => b.Id == id);
             if (business == null)
             {
                 return NotFound();
             }
-            return View(business);
+            ViewBag.Title = "Edit Business";
+            ViewBag.Action = "EditBusiness";
+            ViewBag.Categories = new List<Category>
+                {
+                    new Category { Id = 1, Name = "Coffee Shops" },
+                    new Category { Id = 2, Name = "Retail Shops" },
+                    new Category { Id = 3, Name = "Leisure Activity" }
+                };
+            return View("EditBusiness", business);
         }
 
         [HttpPost]
@@ -50,27 +66,21 @@ namespace StreakyFrontWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingBusiness = businesses.Find(b => b.id == business.id);
+                var existingBusiness = _businesses.FirstOrDefault(b => b.Id == business.Id);
                 if (existingBusiness == null)
                 {
                     return NotFound();
                 }
-
                 existingBusiness.Name = business.Name;
-                existingBusiness.Categoryid = business.Categoryid;
-                existingBusiness.Description = business.Description;
-                existingBusiness.LogoUrl = business.LogoUrl;
-                existingBusiness.ImageUrl = business.ImageUrl;
+                existingBusiness.CategoryId = business.CategoryId;
+                existingBusiness.Image = business.Image;
                 existingBusiness.Question = business.Question;
                 existingBusiness.CorrectAnswer = business.CorrectAnswer;
                 existingBusiness.WrongAnswer1 = business.WrongAnswer1;
                 existingBusiness.WrongAnswer2 = business.WrongAnswer2;
-                existingBusiness.Location1 = business.Location1;
-                existingBusiness.Location2 = business.Location2;
-
-                return RedirectToAction("BusinessList");
+                return RedirectToAction(nameof(BusinessList));
             }
-            return View(business);
+            return View("EditBusiness", business);
         }
     }
 }

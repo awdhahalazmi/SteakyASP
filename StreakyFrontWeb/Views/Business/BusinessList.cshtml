@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StreakyFrontWeb.Models.Business>
+﻿@model IEnumerable<StreakyAPi.Model.Business>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,8 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business List</title>
-
-
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -40,7 +38,7 @@
             gap: 10px;
         }
 
-        .btn-primary, .btn-primary {
+        .btn-primary, .btn-secondary {
             background-color: #6a1b9a;
             border: none;
             border-radius: 5px;
@@ -52,7 +50,7 @@
             justify-content: center;
         }
 
-            .btn-primary:hover, .btn-primary:hover {
+            .btn-primary:hover, .btn-secondary:hover {
                 background-color: #4a148c;
             }
 
@@ -147,16 +145,7 @@
                         height: 20px;
                     }
 
-                    .topbar .profile-info .notification-icon::after {
-                        content: '';
-                        position: absolute;
-                        top: -5px;
-                        right: -5px;
-                        width: 10px;
-                        height: 10px;
-                        background-color: red;
-                        border-radius: 50%;
-                    }
+ 
 
         .content {
             margin-left: 270px;
@@ -173,16 +162,13 @@
             }
     </style>
 </head>
-
-
-
 <body>
     <div class="sidebar">
-        <img src="~/images/Logo.png" alt="Logo">
-        <a href="#">Dashboard</a>
-        <a href="/streak/streaklist">Streak </a>
+        <img src="~/images/logo.png" alt="Logo">
+        <a href="StreakList/StreakList">Streak List</a>
         <a href="/Business/BusinessList" class="active">Business</a>
         <a href="/secretDeal/list">Secret Deal</a>
+        <a href="/Rewards/index">Rewards/</a>
         <a href="/Account/profile">Account</a>
         <a href="#">Logout</a>
     </div>
@@ -194,12 +180,8 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
         </div>
     </div>
-
 
     <div class="content">
         <div class="container">
@@ -207,28 +189,24 @@
                 <h1 class="h3">Business List</h1>
                 <a href="@Url.Action("AddBusiness", "Business")" class="btn btn-primary">Add Partner</a>
             </div>
-
-
             @foreach (var business in Model)
             {
                 <div class="business-card">
                     <div class="d-flex align-items-center">
-                        <img src="@business.LogoUrl" alt="@business.Name">
+                        <img src="@business.Image" alt="@business.Name">
                         <div class="business-details">
                             <h2 class="h5 mb-1">@business.Name</h2>
-                            <p class="mb-0">@business.Categoryid</p>
-                            <p class="mb-0 text-muted">@business.Description</p>
+                            <p class="mb-0">@business.CategoryId</p>
+                            <p class="mb-0 text-muted">@business.Question</p>
                         </div>
                     </div>
                     <div class="business-actions">
-                        <a href="@Url.Action("EditBusiness", "Business", new { id = business.id })" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("EditBusiness", "Business", new { id = business.Id })" class="btn btn-primary">Edit</a>
                     </div>
                 </div>
             }
         </div>
     </div>
-
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

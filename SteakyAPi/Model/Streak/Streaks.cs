@@ -13,10 +13,5 @@
         public ICollection<Reward> Rewards { get; set; } = new List<Reward>();  // Add this line
 
 
-
-
-
-
-
     }
 }
