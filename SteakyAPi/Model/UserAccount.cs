@@ -1,4 +1,5 @@
 ﻿using StreakyAPi.Model.Request;
+using StreakyAPi.Model.Streak;
 using System.Collections.Generic;
 
 namespace StreakyAPi.Model
@@ -12,9 +13,7 @@ namespace StreakyAPi.Model
         public int GenderId { get; set; }
         public string ImagePath { get; set; } = "";
         public double Points { get; set; } = 0;
-        //public int CategoryId { get; set; }
         public Gender Gender { get; set; }
-       // public Category Category { get; set; }
         public bool IsAdmin { get; set; }
 
         public ICollection<Category> Categories { get; set; } = new List<Category>();
@@ -22,6 +21,8 @@ namespace StreakyAPi.Model
         public ICollection<FriendRequest> SentFriendRequests { get; set; } = new List<FriendRequest>();
         public ICollection<FriendRequest> ReceivedFriendRequests { get; set; } = new List<FriendRequest>();
         public ICollection<UserAccount> Friends { get; set; } = new List<UserAccount>();
+        public ICollection<UserStreak> UserStreaks { get; set; } = new List<UserStreak>();
+
 
         private UserAccount() { }
 

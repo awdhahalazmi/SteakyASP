@@ -1,4 +1,4 @@
-﻿@model StreakyAPi.Model.Auth.LoginRequest
+@model StreakyAPi.Model.Auth.LoginRequest
 
 @{
     Layout = null;
@@ -186,16 +186,6 @@
                         height: 20px;
                     }
 
-                    .topbar .profile-info .notification-icon::after {
-                        content: '';
-                        position: absolute;
-                        top: -5px;
-                        right: -5px;
-                        width: 10px;
-                        height: 10px;
-                        background-color: red;
-                        border-radius: 50%;
-                    }
     </style>
 </head>
 
@@ -203,8 +193,9 @@
     <div class="sidebar">
         <img src="~/images/Logo.png" alt="Logo">
         <a href="@Url.Action("Index", "Dashboard")" class="active">Dashboard</a>
-        <a href="@Url.Action("StreakList", "Streak")">Streak List</a>
+        <a href="@Url.Action("StreakList", "StreakList")">Streak List</a>
         <a href="@Url.Action("BusinessList", "Business")"> Business</a>
+        <a href="@Url.Action("Index", "Rewards")">Rewards</a>
         <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
@@ -217,9 +208,6 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
         </div>
     </div>
 

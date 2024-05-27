@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using StreakyAPi.Model.Auth;
@@ -6,6 +6,7 @@ using StreakyFrontWeb.API;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using StreakyAPi.Model.Reponses;
 
 namespace StreakyFrontWeb.Controllers
 {
@@ -27,6 +28,7 @@ namespace StreakyFrontWeb.Controllers
         {
             return View();
         } 
+        
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest request)
         {
@@ -64,8 +66,5 @@ namespace StreakyFrontWeb.Controllers
                 ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
                
             }
-
-            return View();
-        }
     }
 }

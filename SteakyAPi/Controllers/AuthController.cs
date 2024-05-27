@@ -33,10 +33,10 @@ namespace StreakyAPi.Controllers
                 return Conflict("Username already exists");
             }
 
-            var gender = _context.Genders.Find(request.GenderId);
+            var gender = _context.Genders.FirstOrDefault(g => g.GenderName == request.GenderName);
             if (gender == null)
             {
-                return BadRequest("Invalid GenderId");
+                return BadRequest("Invalid GenderName");
             }
 
             var categories = _context.Categories.Where(c => request.CategoryIds.Contains(c.Id)).ToList();
@@ -48,7 +48,7 @@ namespace StreakyAPi.Controllers
             var newUser = UserAccount.Create(
                 request.Email,
                 request.Password,
-                request.GenderId,
+                gender.Id,
                 request.CategoryIds,
                 _context,
                 request.IsAdmin
@@ -66,6 +66,7 @@ namespace StreakyAPi.Controllers
 
             return Ok(new { Token = token });
         }
+
 
         [HttpPost("login")]
         public IActionResult Login(LoginRequest loginDetails)
@@ -316,6 +317,27 @@ namespace StreakyAPi.Controllers
 
             return Ok(friendRequestResponses);
         }
+        [HttpGet("friends")]
+        public IActionResult GetFriends()
+        {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var currentUser = _context.Users
+                .Include(u => u.Friends)
+                .FirstOrDefault(u => u.Email == email);
 
+            if (currentUser == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var friends = currentUser.Friends.Select(f => new
+            {
+                f.Id,
+                f.Name,
+                f.Email
+            }).ToList();
+
+            return Ok(friends);
+        }
     }
 }

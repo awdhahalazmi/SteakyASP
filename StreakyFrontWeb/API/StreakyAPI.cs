@@ -1,4 +1,4 @@
-﻿using StreakyAPi.Model.Auth;
+using StreakyAPi.Model.Auth;
 using StreakyAPi.Model.Reponses;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -31,3 +31,4 @@ namespace StreakyFrontWeb.API
         }
     }
 }
+
