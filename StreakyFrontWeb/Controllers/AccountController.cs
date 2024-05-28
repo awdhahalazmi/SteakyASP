@@ -6,17 +6,16 @@ using StreakyFrontWeb.API;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using StreakyAPi.Model.Reponses;
 
 namespace StreakyFrontWeb.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly StreakyAPI _streakyAPI;
+        private readonly StreakyAPI _api;
 
-        public AccountController(StreakyAPI streakyAPI)
+        public AccountController(StreakyAPI api)
         {
-            _streakyAPI = streakyAPI;
+            _api = api;
         }
 
         public IActionResult Login()
@@ -32,43 +31,44 @@ namespace StreakyFrontWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            try
+            var jwtToken = await _api.Login(request.Email, request.Password);
+            if (!string.IsNullOrEmpty(jwtToken))
             {
-                var jwtToken = await _streakyAPI.Login(request.Email, request.Password);
-                if (!string.IsNullOrEmpty(jwtToken))
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(jwtToken);
+
+                var claimsIdentity = new ClaimsIdentity(jwtSecurityToken.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
                 {
-                    var handler = new JwtSecurityTokenHandler();
-                    var jwtSecurityToken = handler.ReadJwtToken(jwtToken);
+                    IsPersistent = false,
+                    AllowRefresh = true
+                };
 
-                    var claimsIdentity = new ClaimsIdentity(jwtSecurityToken.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
 
-                    var authProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = false,
-                        AllowRefresh = true
-                    };
+                HttpContext.Session.SetString("Token", jwtToken);
+                HttpContext.Response.Cookies.Append("Token", jwtToken);
 
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(claimsIdentity),
-                        authProperties);
-
-                    HttpContext.Session.SetString("Token", jwtToken);
-                    HttpContext.Response.Cookies.Append("Token", jwtToken);
-
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError("Username", "Invalid Username and/or Password");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
-
-
+                return RedirectToAction("BusinessList", "Business");
             }
 
-            return RedirectToAction("Login", "Account");
+            ModelState.AddModelError("Email", "Invalid Username and/or Password");
+            return View();
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult Denied()
+        {
+            return View();
         }
     }
 }

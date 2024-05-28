@@ -1,34 +1,46 @@
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using StreakyAPi.Model.Auth;
 using StreakyAPi.Model.Reponses;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
-
 
 namespace StreakyFrontWeb.API
 {
     public class StreakyAPI
     {
-        private readonly HttpClient _api;
+        private readonly HttpClient _httpClient;
+        private readonly string _baseUrl;
 
-        public StreakyAPI(HttpClient httpClient)
+        public StreakyAPI(HttpClient httpClient, IConfiguration configuration)
         {
-            _api = httpClient;
+            _httpClient = httpClient;
+            _baseUrl = configuration["StreakyAPI:BaseUrl"];
+            _httpClient.BaseAddress = new Uri(_baseUrl);
+
+        
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", GetTokenFromContext());
         }
 
-        public async Task<String> Login(string email, string password)
+        private string GetTokenFromContext()
         {
-            var response = await _api.PostAsJsonAsync("/api/auth/login",
+         
+            return string.Empty;
+        }
+
+        public async Task<string> Login(string email, string password)
+        {
+            var response = await _httpClient.PostAsJsonAsync("auth/login",
                 new LoginRequest { Email = email, Password = password });
 
             if (response.IsSuccessStatusCode)
             {
-                var tokenResponse = await response.Content.ReadFromJsonAsync<UserLoginResponse>(); 
+                var tokenResponse = await response.Content.ReadFromJsonAsync<UserLoginResponse>();
                 var token = tokenResponse.Token;
                 return token;
             }
-            return "";
+            return string.Empty;
         }
     }
 }
-

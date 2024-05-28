@@ -1,9 +1,15 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
 using StreakyFrontWeb.API;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient<StreakyAPI>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<StreakyAPI>();
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession(options =>
 {
@@ -16,14 +22,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-    
     });
 
 var app = builder.Build();
 
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Business/Businesslist");
     app.UseHsts();
 }
 
@@ -39,6 +45,6 @@ app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=account}/{action=login}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
