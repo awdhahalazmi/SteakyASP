@@ -257,5 +257,31 @@ namespace StreakyAPi.Controllers
             return Ok(new { message = "Business updated" });
         }
 
+
+        [HttpDelete("deleteBusiness/{id}")]
+        public async Task<IActionResult> DeleteBusiness(int id)
+        {
+            var business = await _context.Businesses
+                .Include(b => b.Locations)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (business == null)
+            {
+                return NotFound("Business not found");
+            }
+
+            // Remove association with locations
+            foreach (var location in business.Locations.ToList())
+            {
+                business.Locations.Remove(location);
+            }
+
+            await _context.SaveChangesAsync();
+
+            _context.Businesses.Remove(business);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Business deleted" });
+        }
     }
 }

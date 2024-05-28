@@ -14,9 +14,7 @@ namespace StreakyAPi.Model
         }
 
         public DbSet<UserAccount> Users { get; set; }
-        //public DbSet<Post> Posts { get; set; }
-        //public DbSet<Pin> Pins { get; set; }
-        //public DbSet<Rating> Ratings { get; set; }
+        
         public DbSet<Category> Categories { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
@@ -25,6 +23,8 @@ namespace StreakyAPi.Model
         public DbSet<Location> Locations { get; set; }
         public DbSet<Streaks> Streaks { get; set; }
         public DbSet<Reward> Rewards { get; set; }
+        public DbSet<SecretExperience> SecretExperiences { get; set; }
+
 
 
 
@@ -103,7 +103,17 @@ namespace StreakyAPi.Model
                 .WithMany(b => b.Rewards)
                 .HasForeignKey(r => r.BusinessId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SecretExperience>()
+             .HasOne(se => se.Business)
+             .WithMany(b => b.SecretExperiences)
+             .HasForeignKey(se => se.BusinessId);
 
+
+            modelBuilder.Entity<Business>()
+            .HasMany(b => b.Locations)
+            .WithOne()
+            .OnDelete(DeleteBehavior.SetNull); // Set the foreign key to null on delete
+        
             base.OnModelCreating(modelBuilder);
         }
     }

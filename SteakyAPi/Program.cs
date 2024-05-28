@@ -25,6 +25,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+
+
 builder.Services.AddControllers();
 builder.Services.AddScoped<TokenService>();
 
