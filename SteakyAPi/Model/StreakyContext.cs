@@ -112,7 +112,7 @@ namespace StreakyAPi.Model
             modelBuilder.Entity<Business>()
             .HasMany(b => b.Locations)
             .WithOne()
-            .OnDelete(DeleteBehavior.SetNull); // Set the foreign key to null on delete
+            .OnDelete(DeleteBehavior.SetNull);
         
             base.OnModelCreating(modelBuilder);
         }

@@ -13,6 +13,10 @@
         public string CorrectAnswer { get; set; }
         public string WrongAnswer1 { get; set; }
         public string WrongAnswer2 { get; set; }
+        public string Question2 { get; set; }
+        public string CorrectAnswerQ2 { get; set; }
+        public string WrongAnswerQ2_1 { get; set; }
+        public string WrongAnswerQ2_2 { get; set; }
         public List<int> LocationIds { get; set; } = new List<int>(); 
 
     }

@@ -6,25 +6,22 @@ using StreakyFrontWeb.API;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using StreakyAPi.Model.Reponses;
+using Microsoft.Extensions.Logging;
 
 namespace StreakyFrontWeb.Controllers
 {
     public class AccountController : Controller
     {
         private readonly StreakyAPI _streakyAPI;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(StreakyAPI streakyAPI)
+        public AccountController(StreakyAPI streakyAPI, ILogger<AccountController> logger)
         {
             _streakyAPI = streakyAPI;
+            _logger = logger;
         }
 
         public IActionResult Login()
-        {
-            return View();
-        }
-
-        public IActionResult Profile()
         {
             return View();
         }
@@ -34,6 +31,7 @@ namespace StreakyFrontWeb.Controllers
         {
             try
             {
+                _logger.LogInformation("Attempting to log in user with email: {Email}", request.Email);
                 var jwtToken = await _streakyAPI.Login(request.Email, request.Password);
                 if (!string.IsNullOrEmpty(jwtToken))
                 {
@@ -56,19 +54,20 @@ namespace StreakyFrontWeb.Controllers
                     HttpContext.Session.SetString("Token", jwtToken);
                     HttpContext.Response.Cookies.Append("Token", jwtToken);
 
-                    return RedirectToAction("Index", "Home");
+                    _logger.LogInformation("User {Email} logged in successfully", request.Email);
+                    return RedirectToAction("BusinessList", "Business");
                 }
 
+                _logger.LogWarning("Invalid login attempt for user {Email}", request.Email);
                 ModelState.AddModelError("Username", "Invalid Username and/or Password");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while logging in user {Email}", request.Email);
                 ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
-
-
             }
 
-            return RedirectToAction("Login", "Account");
+            return View(request);
         }
     }
 }

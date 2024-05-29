@@ -12,6 +12,11 @@ namespace StreakyAPi.Model
         public string CorrectAnswer { get; set; }
         public string WrongAnswer1 { get; set; }
         public string WrongAnswer2 { get; set; }
+
+        public string Question2 { get; set; }
+        public string CorrectAnswerQ2 { get; set; }
+        public string WrongAnswerQ2_1 { get; set; }
+        public string WrongAnswerQ2_2 { get; set; }
         public ICollection<Location> Locations { get; set; } = new List<Location>();
         public ICollection<Streaks> Streaks { get; set; } = new List<Streaks>();
         public ICollection<Reward> Rewards { get; set; } = new List<Reward>();
