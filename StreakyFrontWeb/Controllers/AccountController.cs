@@ -6,16 +6,19 @@ using StreakyFrontWeb.API;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace StreakyFrontWeb.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly StreakyAPI _api;
+        private readonly StreakyAPI _streakyAPI;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(StreakyAPI api)
+        public AccountController(StreakyAPI streakyAPI, ILogger<AccountController> logger)
         {
-            _api = api;
+            _streakyAPI = streakyAPI;
+            _logger = logger;
         }
 
         public IActionResult Login()
@@ -23,52 +26,48 @@ namespace StreakyFrontWeb.Controllers
             return View();
         }
 
-        public IActionResult Profile()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var jwtToken = await _api.Login(request.Email, request.Password);
-            if (!string.IsNullOrEmpty(jwtToken))
+            try
             {
-                var handler = new JwtSecurityTokenHandler();
-                var jwtSecurityToken = handler.ReadJwtToken(jwtToken);
-
-                var claimsIdentity = new ClaimsIdentity(jwtSecurityToken.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties
+                _logger.LogInformation("Attempting to log in user with email: {Email}", request.Email);
+                var jwtToken = await _streakyAPI.Login(request.Email, request.Password);
+                if (!string.IsNullOrEmpty(jwtToken))
                 {
-                    IsPersistent = false,
-                    AllowRefresh = true
-                };
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwtSecurityToken = handler.ReadJwtToken(jwtToken);
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
+                    var claimsIdentity = new ClaimsIdentity(jwtSecurityToken.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                HttpContext.Session.SetString("Token", jwtToken);
-                HttpContext.Response.Cookies.Append("Token", jwtToken);
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = false,
+                        AllowRefresh = true
+                    };
 
-                return RedirectToAction("BusinessList", "Business");
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+
+                    HttpContext.Session.SetString("Token", jwtToken);
+                    HttpContext.Response.Cookies.Append("Token", jwtToken);
+
+                    _logger.LogInformation("User {Email} logged in successfully", request.Email);
+                    return RedirectToAction("BusinessList", "Business");
+                }
+
+                _logger.LogWarning("Invalid login attempt for user {Email}", request.Email);
+                ModelState.AddModelError("Username", "Invalid Username and/or Password");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while logging in user {Email}", request.Email);
+                ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
             }
 
-            ModelState.AddModelError("Email", "Invalid Username and/or Password");
-            return View();
-        }
-
-        public IActionResult Logout()
-        {
-            HttpContext.SignOutAsync();
-            return RedirectToAction("Login");
-        }
-
-        public IActionResult Denied()
-        {
-            return View();
+            return View(request);
         }
     }
 }

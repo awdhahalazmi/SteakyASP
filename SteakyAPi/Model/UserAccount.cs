@@ -15,6 +15,7 @@ namespace StreakyAPi.Model
         public double Points { get; set; } = 0;
         public Gender Gender { get; set; }
         public bool IsAdmin { get; set; }
+        public int? UserStreaksCount { get; set; } // in the user streak controller use this 
 
         public ICollection<Category> Categories { get; set; } = new List<Category>();
 

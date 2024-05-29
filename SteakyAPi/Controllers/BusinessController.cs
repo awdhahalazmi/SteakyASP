@@ -4,11 +4,9 @@ using StreakyAPi.Model;
 using StreakyAPi.Model.Request;
 using StreakyAPi.Model.Responses;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Threading.Tasks;
-using System.Linq;
 using StreakyAPi.Model.Reponses;
 using StreakyAPi.Model.Token;
+using Azure.Core;
 
 namespace StreakyAPi.Controllers
 {
@@ -96,7 +94,7 @@ namespace StreakyAPi.Controllers
         }
 
         [HttpPost("business")]
-        public async Task<IActionResult> CreatePost([FromForm] BusinessRequest request)
+        public async Task<IActionResult> CreateBusiness([FromForm] BusinessRequest request)
         {
             var email = User.FindFirst(TokenClaimsConstant.Email).Value;
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
@@ -124,6 +122,10 @@ namespace StreakyAPi.Controllers
                 CorrectAnswer = request.CorrectAnswer,
                 WrongAnswer1 = request.WrongAnswer1,
                 WrongAnswer2 = request.WrongAnswer2,
+                Question2 = request.Question2, 
+                CorrectAnswerQ2 = request.CorrectAnswerQ2, 
+                WrongAnswerQ2_1 = request.WrongAnswerQ2_1, 
+                WrongAnswerQ2_2 = request.WrongAnswerQ2_2, 
                 CategoryId = request.CategoryId,
                 Locations = locations
             };
@@ -166,6 +168,11 @@ namespace StreakyAPi.Controllers
                 CorrectAnswer = b.CorrectAnswer,
                 WrongAnswer1 = b.WrongAnswer1,
                 WrongAnswer2 = b.WrongAnswer2,
+                Question2 = b.Question2, 
+                CorrectAnswerQ2 = b.CorrectAnswerQ2, 
+                WrongAnswerQ2_1 = b.WrongAnswerQ2_1, 
+                WrongAnswerQ2_2 = b.WrongAnswerQ2_2, 
+
                 Locations = b.Locations.Select(l => new LocationResponse
                 {
                     Id = l.Id,
@@ -190,7 +197,7 @@ namespace StreakyAPi.Controllers
                 return NotFound("Business not found");
             }
 
-            // Update fields only if they are provided in the request
+          
             if (!string.IsNullOrEmpty(request.Name))
             {
                 business.Name = request.Name;
@@ -225,7 +232,25 @@ namespace StreakyAPi.Controllers
             {
                 business.WrongAnswer2 = request.WrongAnswer2;
             }
+            if (!string.IsNullOrEmpty(request.Question2)) 
+            {
+                business.Question2 = request.Question2;
+            }
 
+            if (!string.IsNullOrEmpty(request.CorrectAnswerQ2)) 
+            {
+                business.CorrectAnswerQ2 = request.CorrectAnswerQ2;
+            }
+
+            if (!string.IsNullOrEmpty(request.WrongAnswerQ2_1)) 
+            {
+                business.WrongAnswerQ2_1 = request.WrongAnswerQ2_1;
+            }
+
+            if (!string.IsNullOrEmpty(request.WrongAnswerQ2_2)) 
+            {
+                business.WrongAnswerQ2_2 = request.WrongAnswerQ2_2;
+            }
             if (request.LocationIds != null && request.LocationIds.Any())
             {
                 var locations = _context.Locations.Where(l => request.LocationIds.Contains(l.Id)).ToList();
@@ -255,6 +280,75 @@ namespace StreakyAPi.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Business updated" });
+        }
+
+
+        [HttpDelete("deleteBusiness/{id}")]
+        public async Task<IActionResult> DeleteBusiness(int id)
+        {
+            var business = await _context.Businesses
+                .Include(b => b.Locations)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (business == null)
+            {
+                return NotFound("Business not found");
+            }
+
+            foreach (var location in business.Locations.ToList())
+            {
+                business.Locations.Remove(location);
+            }
+
+            await _context.SaveChangesAsync();
+
+            _context.Businesses.Remove(business);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Business deleted" });
+        }
+        [HttpGet("getBusiness/{id}")]
+        public async Task<IActionResult> GetBusinessById(int id)
+        {
+            var business = await _context.Businesses
+                .Include(b => b.Category)
+                .Include(b => b.Locations)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (business == null)
+            {
+                return NotFound("Business not found");
+            }
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
+            var response = new BusinessResponse
+            {
+                Id = business.Id,
+                Name = business.Name,
+                CategoryId = business.CategoryId,
+                Image = $"{baseUrl}/{business.Image}",
+                Question = business.Question,
+                CorrectAnswer = business.CorrectAnswer,
+                WrongAnswer1 = business.WrongAnswer1,
+                WrongAnswer2 = business.WrongAnswer2,
+                Question2 = business.Question2,
+                CorrectAnswerQ2 = business.CorrectAnswerQ2,
+                WrongAnswerQ2_1 = business.WrongAnswerQ2_1,
+                WrongAnswerQ2_2 = business.WrongAnswerQ2_2,
+                Locations = business.Locations.Select(l => new LocationResponse
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    URL = l.URL,
+                    Radius = l.Radius,
+                    Latitude = l.Latitude,
+                    Longitude = l.Longitude
+                }).ToList(),
+                CategoryName = business.Category.Name
+            };
+
+            return Ok(response);
         }
 
     }
