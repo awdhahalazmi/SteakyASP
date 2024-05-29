@@ -12,6 +12,9 @@ builder.Services.AddHttpClient<StreakyAPI>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]);
 });
 
+// Add IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
 // Configure session
 builder.Services.AddSession(options =>
 {
@@ -31,7 +34,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
-        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        policyBuilder => policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 var app = builder.Build();
