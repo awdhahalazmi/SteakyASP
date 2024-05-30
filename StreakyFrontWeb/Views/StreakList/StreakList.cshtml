@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StreakyFrontWeb.Models.Streaks>
+﻿@model IEnumerable<StreakyAPi.Model.Responses.StreakResponse>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +13,41 @@
             margin: 0;
             padding: 0;
         }
+
+        .streak-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .streak-details {
+            flex-grow: 1;
+        }
+
+        .streak-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary, .btn-secondary {
+            background-color: #6a1b9a;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-primary:hover, .btn-secondary:hover {
+                background-color: #4a148c;
+            }
 
         .sidebar {
             width: 250px;
@@ -105,51 +140,30 @@
                         height: 20px;
                     }
 
-                  
-
         .content {
             margin-left: 270px;
             padding-top: 80px;
-            padding: 20px;
-        }
-
-        .streak-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 20px;
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
         }
 
-        .streak-details {
-            flex-grow: 1;
-        }
-
-        .streak-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-primary, .btn-secondary {
-            background-color: #6a1b9a;
-            border: none;
-        }
-
-            .btn-primary:hover, .btn-secondary:hover {
-                background-color: #4a148c;
+            .content .container {
+                width: 100%;
+                max-width: 900px;
             }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="@Url.Action("StreakList", "Streaklist")" class="active">Streak List</a>
+        <a href="@Url.Action("StreakList", "StreakList")" class="active">Streak List</a>
         <a href="@Url.Action("BusinessList", "Business")">Business</a>
         <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
+
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -160,26 +174,31 @@
             <span class="dropdown-icon">&#x25BC;</span>
         </div>
     </div>
+
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Streak List</h1>
-            <a href="@Url.Action("AddStreak", "StreakList")" class="btn btn-primary">Add Streak</a>
-        </div>
-        @foreach (var streak in Model)
-        {
-            <div class="streak-card">
-                <div class="streak-details">
-                    <h2 class="h5 mb-1">@streak.Title</h2>
-                    <p class="mb-0">@streak.Description</p>
-                    <p class="mb-0 text-muted">Business: @streak.BusinessId</p>
-                    <p class="mb-0 text-muted">Start Date: @streak.StartDate.ToString("yyyy-MM-dd")</p>
-                    <p class="mb-0 text-muted">End Date: @streak.EndDate.ToString("yyyy-MM-dd")</p>
-                </div>
-                <div class="streak-actions">
-                    <a href="@Url.Action("EditStreak", "StreakList", new { id = streak.Id })" class="btn btn-secondary">Edit</a>
-                </div>
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">Streak List</h1>
+                <a href="@Url.Action("AddStreak", "StreakList")" class="btn btn-primary">Add Streak</a>
             </div>
-        }
+            @foreach (var streak in Model)
+            {
+                <div class="streak-card">
+                    <div class="streak-details">
+                        <h2 class="h5 mb-1">@streak.Title</h2>
+                        <p class="mb-0">@streak.Description</p>
+                        <p class="mb-0 text-muted">Start Date: @streak.StartDate.ToString("yyyy-MM-dd")</p>
+                        <p class="mb-0 text-muted">End Date: @streak.EndDate.ToString("yyyy-MM-dd")</p>
+                    </div>
+                    <div class="streak-actions">
+                        <a href="@Url.Action("EditStreak", "StreakList", new { id = streak.Id })" class="btn btn-primary">Edit</a>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

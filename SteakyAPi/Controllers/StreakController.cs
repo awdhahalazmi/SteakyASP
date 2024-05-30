@@ -80,58 +80,7 @@ namespace StreakyAPi.Controllers
             return Ok(new { Message = "Streak created", Streak = response });
         }
 
-        //[HttpPost("startStreak/{streakId}")]
-        //public async Task<IActionResult> StartStreak(int streakId)
-        //{
-        //    var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        //    if (user == null)
-        //    {
-        //        return NotFound("User not found");
-        //    }
-
-        //    var streak = await _context.Streaks
-        //        .Include(s => s.Businsses)
-        //        .ThenInclude(b => b.Locations)
-        //        .FirstOrDefaultAsync(s => s.Id == streakId);
-        //    if (streak == null)
-        //    {
-        //        return NotFound("Streak not found");
-        //    }
-
-        //    var userStreak = new UserStreak
-        //    {
-        //        UserId = user.Id,
-        //        StreakId = streak.Id,
-        //        StartDate = DateTime.Now,
-        //        EndDate = streak.EndDate
-        //    };
-
-        //    _context.UserStreaks.Add(userStreak);
-        //    await _context.SaveChangesAsync();
-
-        //    var response = new
-        //    {
-        //        StreakId = streak.Id,
-        //        StreakTitle = streak.Title,
-        //        Businesses = streak.Businsses.Select(b => new
-        //        {
-        //            b.Name,
-        //            Locations = b.Locations.Select(l => new LocationResponse
-        //            {
-        //                Id = l.Id,
-        //                Name = l.Name,
-        //                URL = l.URL,
-        //                Radius = l.Radius,
-        //                Latitude = l.Latitude,
-        //                Longitude = l.Longitude
-        //            }).ToList()
-        //        }).ToList()
-        //    };
-
-        //    return Ok(response);
-        //}
-
+       
         [HttpGet("getAllStreaks")]
         public async Task<IActionResult> GetAllStreaks()
         {
@@ -206,6 +155,56 @@ namespace StreakyAPi.Controllers
 
             return Ok(new { Message = "Streak updated" });
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetStreakById(int id)
+        {
+            var streak = await _context.Streaks
+                .Include(s => s.Businsses)
+                    .ThenInclude(b => b.Locations)
+                .Include(s => s.Businsses)
+                    .ThenInclude(b => b.Category)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (streak == null)
+            {
+                return NotFound("Streak not found");
+            }
+
+            var response = new StreakResponse
+            {
+                Id = streak.Id,
+                Title = streak.Title,
+                Description = streak.Description,
+                StartDate = streak.StartDate,
+                EndDate = streak.EndDate,
+                Businesses = streak.Businsses.Select(b => new BusinessResponse
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                    CategoryId = b.CategoryId,
+                    Image = b.Image,
+                    Question = b.Question,
+                    CorrectAnswer = b.CorrectAnswer,
+                    WrongAnswer1 = b.WrongAnswer1,
+                    WrongAnswer2 = b.WrongAnswer2,
+                    Locations = b.Locations?.Select(l => new LocationResponse
+                    {
+                        Id = l.Id,
+                        Name = l.Name,
+                        URL = l.URL,
+                        Radius = l.Radius,
+                        Latitude = l.Latitude,
+                        Longitude = l.Longitude
+                    }).ToList() ?? new List<LocationResponse>(),
+                    CategoryName = b.Category?.Name
+                }).ToList()
+            };
+
+            return Ok(response);
+        }
+
+
 
         [HttpDelete("deleteStreak/{streakId}")]
         public async Task<IActionResult> DeleteStreak(int streakId)

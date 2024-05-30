@@ -1,4 +1,4 @@
-﻿@model StreakyFrontWeb.Models.Streaks
+﻿@model StreakyAPi.Model.Request.StreakRequest
 
 <!DOCTYPE html>
 <html lang="en">
@@ -105,8 +105,6 @@
             height: 20px;
         }
 
-
-
         .content {
             margin-left: 270px;
             padding-top: 80px;
@@ -131,8 +129,9 @@
         }
 
         .btn-secondary {
-            border: 1px solid #6a1b9a;
+            background-color: white;
             color: #6a1b9a;
+            border: 1px solid #6a1b9a;
         }
 
         .btn-secondary:hover {
@@ -142,6 +141,18 @@
         .button-group {
             display: flex;
             justify-content: space-between;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .delete-link {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -153,6 +164,7 @@
         <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
+
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -161,14 +173,15 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
         </div>
     </div>
+
     <div class="content">
-        <h1>Edit Streak</h1>
-        <form method="post" action="@Url.Action("EditStreak", "Streak")">
+        <div class="header">
+            <h1>Edit Streak</h1>
+            <a href="#" class="delete-link" onclick="deleteStreak(@Model.Id); return false;">Delete</a>
+        </div>
+        <form method="post" asp-action="EditStreak" asp-controller="StreakList">
             <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
                 <label for="Title">Title</label>
@@ -178,16 +191,6 @@
                 <label for="Description">Description</label>
                 <input type="text" class="form-control" id="Description" name="Description" value="@Model.Description" required />
             </div>
-       @*      <div class="form-group">
-                <label for="BusinessId">Business</label>
-                <select class="form-control" id="BusinessId" name="BusinessId" required>
-                    <option value="">Select Business</option>
-                    @foreach (var business in ViewBag.Businesses)
-                    {
-                  //      <option value="@business.Id" @(Model.BusinessId == business.Id ? "selected" : "")>@business.Name</option>
-                    }
-                </select>
-            </div> *@
             <div class="form-group">
                 <label for="StartDate">Start Date</label>
                 <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
@@ -196,189 +199,32 @@
                 <label for="EndDate">End Date</label>
                 <input type="date" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
             </div>
-            <div class="form-group button-group">
-                <a href="@Url.Action("StreakList", "StreakList")" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save</button>
+            <div class="form-group">
+                <label for="BusinessIds">Businesses</label>
+                <select class="form-control" id="BusinessIds" name="BusinessIds" multiple required>
+                    @foreach (var business in ViewBag.Businesses)
+                    {
+                        <option value="@business.Id">@business.Name</option>
+                    }
+                </select>
             </div>
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="@Url.Action("StreakList", "StreakList")" class="btn btn-secondary">Cancel</a>
+            </div>
+            @Html.AntiForgeryToken()
         </form>
     </div>
+    <form id="delete-form" method="post" asp-action="DeleteStreak" asp-controller="StreakList">
+        <input type="hidden" name="id" value="@Model.Id" />
+        @Html.AntiForgeryToken()
+    </form>
+    <script>
+        function deleteStreak(id) {
+            if (confirm('Are you sure you want to delete this streak?')) {
+                document.getElementById('delete-form').submit();
+            }
+        }
+    </script>
 </body>
 </html>
-
-@* 
-    first try WORKS
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Edit Streak</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            height: 100vh;
-            margin: 0;
-            color: #4A4A4A;
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #f1f1f1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .menu {
-            margin-bottom: 20px;
-        }
-
-        .menu-item {
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #6f42c1;
-            cursor: pointer;
-        }
-
-        .menu-item.active {
-            color: #6f42c1;
-            background-color: #e7e6f9;
-            border-radius: 5px;
-            padding: 10px;
-        }
-
-        .logout {
-            margin-top: auto;
-        }
-
-        .logout a {
-            text-decoration: none;
-            color: #6f42c1;
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: 20px 40px;
-            background-color: #ffffff;
-            position: relative;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4A4A4A;
-        }
-
-        .delete-button {
-            background-color: #ff4d4d;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover {
-            background-color: #e60000;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .save-button {
-            background-color: #6f42c1;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .save-button:hover {
-            background-color: #5a32a1;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="sidebar">
-            <div class="search-bar">
-                <input type="text" placeholder="Search" />
-            </div>
-            <div class="menu">
-                <div class="menu-item">Streak List</div>
-                <div class="menu-item">Add Business</div>
-                <div class="menu-item">Our Partners</div>
-                <div class="menu-item">Account</div>
-            </div>
-            <div class="logout">
-                <a href="/logout">Logout</a>
-            </div>
-        </div>
-        <div class="content">
-            <div class="header">
-                <h1>Edit</h1>
-                <form asp-action="Delete" method="post" style="display: inline;">
-                    <input type="hidden" name="id" value="@Model.Id" />
-                    <button type="submit" class="delete-button">Delete</button>
-                </form>
-            </div>
-            <form asp-action="Edit" method="post">
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group">
-                    <label asp-for="StreakDate">Streak Date</label>
-                    <input asp-for="StreakDate" type="date" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label asp-for="Name">Business</label>
-                    <select asp-for="Name" class="form-control">
-                        <option value="Pick Yo">Pick Yo</option>
-                        <option value="Ananas">Ananas</option>
-                    </select>
-                </div>
-                <button type="submit" class="save-button">Save</button>
-            </form>
-        </div>
-    </div>
-</body>
-</html> *@

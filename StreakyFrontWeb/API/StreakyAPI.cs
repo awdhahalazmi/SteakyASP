@@ -1,7 +1,9 @@
 using StreakyAPi.Model;
 using StreakyAPi.Model.Auth;
 using StreakyAPi.Model.Reponses;
+using StreakyAPi.Model.Request;
 using StreakyAPi.Model.Responses;
+using StreakyAPi.Model.Streak;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -98,6 +100,97 @@ namespace StreakyFrontWeb.API
                 // Handle exception if necessary
             }
             return false;
+        }
+
+        public async Task<bool> EditBusiness(int id, MultipartFormDataContent content)
+        {
+            try
+            {
+                AddAuthTokenHeader();
+                var response = await _api.PutAsync($"/business/editBusiness/{id}", content);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                // Handle exception if necessary
+                return false;
+            }
+        }
+
+        public async Task<BusinessResponse> GetBusinessById(int id)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync($"/business/getBusiness/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var business = await response.Content.ReadFromJsonAsync<BusinessResponse>();
+                return business;
+            }
+            return null;
+        }
+
+        public async Task<bool> DeleteBusiness(int id)
+        {
+            try
+            {
+                AddAuthTokenHeader();
+                var response = await _api.DeleteAsync($"/business/deleteBusiness/{id}");
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                // Handle exception if necessary
+                return false;
+            }
+        }
+
+        public async Task<bool> AddStreak(StreakRequest request)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.PostAsJsonAsync("/Streak/addStreak", request);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<StreakResponse>> GetAllStreaks()
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync("/Streak/getAllStreaks");
+            if (response.IsSuccessStatusCode)
+            {
+                var streaks = await response.Content.ReadFromJsonAsync<List<StreakResponse>>();
+                return streaks;
+            }
+            return null;
+        }
+
+        public async Task<bool> EditStreak(int streakId, StreakRequest request)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.PutAsJsonAsync($"/Streak/editStreak/{streakId}", request);
+            return response.IsSuccessStatusCode;
+        }
+
+
+
+
+
+        public async Task<StreakResponse> GetStreakById(int streakId)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync($"/Streak/{streakId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var streak = await response.Content.ReadFromJsonAsync<StreakResponse>();
+                return streak;
+            }
+            return null;
+        }
+
+        public async Task<bool> DeleteStreak(int streakId)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.DeleteAsync($"/Streak/deleteStreak/{streakId}");
+            return response.IsSuccessStatusCode;
         }
     }
 }
