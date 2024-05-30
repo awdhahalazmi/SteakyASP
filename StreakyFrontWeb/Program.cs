@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Configuration;
+using StreakyAPi.Model;
 using StreakyFrontWeb.API;
 
 var builder = WebApplication.CreateBuilder(args);

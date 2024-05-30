@@ -9,6 +9,8 @@ using StreakyAPi.Model.Token;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization; 
+
 
 namespace StreakyAPi.Controllers
 {
@@ -17,15 +19,25 @@ namespace StreakyAPi.Controllers
     public class StreakController : ControllerBase
     {
         private readonly StreakyContext _context;
+        private readonly IConfiguration _configuration;
 
-        public StreakController(StreakyContext context)
+
+        public StreakController(StreakyContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+
         }
 
         [HttpPost("addStreak")]
         public async Task<IActionResult> AddStreak([FromBody] StreakRequest request)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var businesses = await _context.Businesses
                 .Where(b => request.BusinessIds.Contains(b.Id))
                 .ToListAsync();
@@ -84,6 +96,12 @@ namespace StreakyAPi.Controllers
         [HttpGet("getAllStreaks")]
         public async Task<IActionResult> GetAllStreaks()
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var streaks = await _context.Streaks
                 .Include(s => s.Businsses)
                     .ThenInclude(b => b.Locations)
@@ -126,6 +144,12 @@ namespace StreakyAPi.Controllers
         [HttpPut("editStreak/{streakId}")]
         public async Task<IActionResult> EditStreak(int streakId, [FromBody] StreakRequest request)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var streak = await _context.Streaks
                 .Include(s => s.Businsses)
                 .FirstOrDefaultAsync(s => s.Id == streakId);
@@ -159,6 +183,12 @@ namespace StreakyAPi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStreakById(int id)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var streak = await _context.Streaks
                 .Include(s => s.Businsses)
                     .ThenInclude(b => b.Locations)
@@ -209,6 +239,12 @@ namespace StreakyAPi.Controllers
         [HttpDelete("deleteStreak/{streakId}")]
         public async Task<IActionResult> DeleteStreak(int streakId)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var streak = await _context.Streaks.FindAsync(streakId);
 
             if (streak == null)
@@ -224,6 +260,7 @@ namespace StreakyAPi.Controllers
         [HttpGet("getUserStreaks")]
         public async Task<IActionResult> GetUserStreaks()
         {
+           
             var email = User.FindFirst(TokenClaimsConstant.Email).Value;
             var user = await _context.Users
                 .Include(u => u.UserStreaks)
@@ -242,6 +279,7 @@ namespace StreakyAPi.Controllers
         [HttpGet("getUserStreaksWithinDays/{days}")]
         public async Task<IActionResult> GetUserStreaksWithinDays(int days)
         {
+
             var email = User.FindFirst(TokenClaimsConstant.Email).Value;
             var user = await _context.Users
                 .Include(u => u.UserStreaks)

@@ -1,11 +1,12 @@
-﻿@model IEnumerable<StreakyAPi.Model.Responses.RewardResponse>
+﻿@using StreakyAPi.Model.Streak
+@model StreakyAPi.Model.Request.RewardRequest
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rewards List</title>
+    <title>Edit Reward</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -13,49 +14,6 @@
             margin: 0;
             padding: 0;
         }
-
-        .reward-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-            .reward-card img {
-                height: 50px;
-                width: 50px;
-                margin-right: 20px;
-                object-fit: cover;
-                border-radius: 50%;
-            }
-
-        .reward-details {
-            flex-grow: 1;
-        }
-
-        .reward-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-primary, .btn-secondary {
-            background-color: #6a1b9a;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-            .btn-primary:hover, .btn-secondary:hover {
-                background-color: #4a148c;
-            }
 
         .sidebar {
             width: 250px;
@@ -151,25 +109,61 @@
         .content {
             margin-left: 270px;
             padding-top: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            padding: 20px;
         }
 
-            .content .container {
-                width: 100%;
-                max-width: 900px;
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #6a1b9a;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #4a148c;
             }
+
+        .btn-secondary {
+            background-color: white;
+            color: #6a1b9a;
+            border: 1px solid #6a1b9a;
+        }
+
+            .btn-secondary:hover {
+                background-color: #f0f2f5;
+            }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .delete-link {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
         <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList" class="active">Business</a>
+        <a href="/Business/BusinessList">Business</a>
         <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index">Rewards</a>
+        <a href="/Rewards/index" class="active">Rewards</a>
         <a href="/Account/profile">Account</a>
         <a href="#">Logout</a>
     </div>
@@ -183,37 +177,48 @@
             <span class="dropdown-icon">&#x25BC;</span>
         </div>
     </div>
-
     <div class="content">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">Rewards List</h1>
-                <a href="@Url.Action("AddReward", "Rewards")" class="btn btn-primary">Add Reward</a>
-            </div>
-            @foreach (var reward in Model)
-            {
-                <div class="reward-card">
-                    <div class="d-flex align-items-center">
-                        <img src="@reward.BusinessImage" alt="@reward.BusinessName">
-                        <div class="reward-details">
-                            <h2 class="h5 mb-1">@reward.StreakTitle</h2>
-                            <p class="mb-0">@reward.Description</p>
-                            <p class="mb-0 text-muted">@reward.PointsClaimed Points Claimed</p>
-                            <p class="mb-0 text-muted">Business: @reward.BusinessName</p>
-                        </div>
-                    </div>
-                    <div class="reward-actions">
-                        <a href="@Url.Action("EditReward", "Rewards", new { id = reward.Id })" class="btn btn-primary">Edit</a>
-                        <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this reward?');">
-                            <input type="hidden" name="id" value="@reward.Id" />
-                        </form>
-                    </div>
-                </div>
-            }
+        <div class="header">
+            <h1>Edit Reward</h1>
+            <a href="#" class="delete-link" onclick="deleteReward(@Model.Id); return false;">Delete</a>
         </div>
+        <form method="post" enctype="multipart/form-data" asp-action="EditReward" asp-controller="Rewards">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <div class="form-group">
+                <label for="StreakId">Streak</label>
+                <select class="form-control" id="StreakId" name="StreakId" asp-items="@(new SelectList(ViewBag.Streaks ?? new List<Streaks>(), "Id", "Title", Model.StreakId))" required>
+                    <option value="">Select Streak</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <textarea class="form-control" id="Description" name="Description" required>@Model.Description</textarea>
+            </div>
+            <div class="form-group">
+                <label for="PointsClaimed">Points Claimed</label>
+                <input type="number" class="form-control" id="PointsClaimed" name="PointsClaimed" value="@Model.PointsClaimed" required />
+            </div>
+            <div class="form-group">
+                <label for="BusinessId">Business</label>
+                <select class="form-control" id="BusinessId" name="BusinessId" asp-items="@(new SelectList(ViewBag.Businesses ?? new List<StreakyAPi.Model.Responses.BusinessResponse>(), "Id", "Name", Model.BusinessId))" required>
+                    <option value="">Select Business</option>
+                </select>
+            </div>
+            <div class="form-group button-group">
+                <a href="@Url.Action("Index", "Rewards")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <form id="delete-form" method="post" asp-action="Delete" asp-controller="Rewards">
+        <input type="hidden" name="id" value="@Model.Id" />
+    </form>
+    <script>
+        function deleteReward(id) {
+            if (confirm('Are you sure you want to delete this reward?')) {
+                document.getElementById('delete-form').submit();
+            }
+        }
+    </script>
 </body>
 </html>

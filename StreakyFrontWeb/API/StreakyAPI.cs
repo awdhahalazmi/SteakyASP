@@ -192,5 +192,50 @@ namespace StreakyFrontWeb.API
             var response = await _api.DeleteAsync($"/Streak/deleteStreak/{streakId}");
             return response.IsSuccessStatusCode;
         }
+        public async Task<List<RewardResponse>> GetAllRewards()
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync("/rewards/getAllRewards");
+            if (response.IsSuccessStatusCode)
+            {
+                var rewards = await response.Content.ReadFromJsonAsync<List<RewardResponse>>();
+                return rewards;
+            }
+            return null;
+        }
+
+        public async Task<bool> DeleteReward(int id)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.DeleteAsync($"/rewards/deleteReward/{id}");
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<bool> AddReward(RewardRequest request)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.PostAsJsonAsync("/rewards/addReward", request);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> EditReward(int id, MultipartFormDataContent formContent)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.PutAsync($"/rewards/editReward/{id}", formContent);
+            return response.IsSuccessStatusCode;
+        }
+
+
+        public async Task<RewardResponse> GetRewardById(int id)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync($"/rewards/getReward/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var reward = await response.Content.ReadFromJsonAsync<RewardResponse>();
+                return reward;
+            }
+            return null;
+        }
+
     }
 }
