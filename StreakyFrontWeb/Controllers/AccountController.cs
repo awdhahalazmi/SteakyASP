@@ -51,8 +51,8 @@ namespace StreakyFrontWeb.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    HttpContext.Session.SetString("Token", jwtToken);
-                    HttpContext.Response.Cookies.Append("Token", jwtToken);
+                    HttpContext.Session.SetString("AuthToken", jwtToken);
+                    HttpContext.Response.Cookies.Append("AuthToken", jwtToken);
 
                     _logger.LogInformation("User {Email} logged in successfully", request.Email);
                     return RedirectToAction("BusinessList", "Business");

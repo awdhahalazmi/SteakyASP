@@ -3,6 +3,8 @@ using StreakyAPi.Model.Auth;
 using StreakyAPi.Model.Reponses;
 using StreakyAPi.Model.Request;
 using StreakyAPi.Model.Responses;
+using Microsoft.EntityFrameworkCore;
+using StreakyAPi.Model;
 using StreakyAPi.Model.Streak;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -210,19 +212,29 @@ namespace StreakyFrontWeb.API
             var response = await _api.DeleteAsync($"/rewards/deleteReward/{id}");
             return response.IsSuccessStatusCode;
         }
-        public async Task<bool> AddReward(RewardRequest request)
+        public async Task<bool> AddReward(RewardRequest rewardRequest)
         {
             AddAuthTokenHeader();
-            var response = await _api.PostAsJsonAsync("/rewards/addReward", request);
+            var response = await _api.PostAsJsonAsync("/rewards/addReward", rewardRequest);
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> EditReward(int id, MultipartFormDataContent formContent)
+        public async Task<bool> EditReward(int id, RewardRequest rewardRequest)
         {
             AddAuthTokenHeader();
-            var response = await _api.PutAsync($"/rewards/editReward/{id}", formContent);
-            return response.IsSuccessStatusCode;
+            var response = await _api.PutAsJsonAsync($"/rewards/editReward/{id}", rewardRequest);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error updating reward: {response.StatusCode} - {error}");
+                return false;
+            }
         }
+
 
 
         public async Task<RewardResponse> GetRewardById(int id)

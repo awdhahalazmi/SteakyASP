@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc;
 using StreakyAPi.Model.Request;
 using StreakyFrontWeb.API;
+using StreakyAPi.Model;
+using StreakyAPi.Model.Reponses;
+using StreakyAPi.Model.Responses;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
-public class RewardsController : Controller
+public class MyRewardController : Controller
 {
     private readonly StreakyAPI _streakyAPI;
 
-    public RewardsController(StreakyAPI streakyAPI)
+    public MyRewardController(StreakyAPI streakyAPI)
     {
         _streakyAPI = streakyAPI;
     }
@@ -141,20 +147,16 @@ public class RewardsController : Controller
     {
         if (ModelState.IsValid)
         {
-            var formContent = new MultipartFormDataContent
-            {
-                { new StringContent(rewardUpdateRequest.StreakId.ToString()), nameof(rewardUpdateRequest.StreakId) },
-                { new StringContent(rewardUpdateRequest.Description), nameof(rewardUpdateRequest.Description) },
-                { new StringContent(rewardUpdateRequest.PointsClaimed.ToString()), nameof(rewardUpdateRequest.PointsClaimed) },
-                { new StringContent(rewardUpdateRequest.BusinessId.ToString()), nameof(rewardUpdateRequest.BusinessId) }
-            };
-
-            var response = await _streakyAPI.EditReward(rewardUpdateRequest.Id, formContent);
+            var response = await _streakyAPI.EditReward(rewardUpdateRequest.Id, rewardUpdateRequest);
             if (response)
             {
                 return RedirectToAction(nameof(Index));
             }
             TempData["Error"] = "Failed to update reward. Please try again.";
+        }
+        else
+        {
+            TempData["Error"] = "Invalid data. Please check the input and try again.";
         }
 
         var streaks = await _streakyAPI.GetAllStreaks();
@@ -174,4 +176,7 @@ public class RewardsController : Controller
 
         return View(rewardUpdateRequest);
     }
+
+
+
 }

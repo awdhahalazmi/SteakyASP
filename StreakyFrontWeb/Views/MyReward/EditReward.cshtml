@@ -1,5 +1,5 @@
-﻿@using StreakyAPi.Model.Streak
-@model StreakyAPi.Model.Request.RewardRequest
+﻿@using StreakyAPi.Model.Request
+@model RewardRequest
 
 <!DOCTYPE html>
 <html lang="en">
@@ -160,11 +160,11 @@
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList">Business</a>
-        <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index" class="active">Rewards</a>
-        <a href="/Account/profile">Account</a>
+        <a href="/StreakList/StreakList">Streak List</a>
+        <a href="/Business/List">Business</a>
+        <a href="/SecretDeal/List">Secret Deal</a>
+        <a href="/MyReward/Index" class="active">Rewards</a>
+        <a href="/Account/Profile">Account</a>
         <a href="#">Logout</a>
     </div>
     <div class="topbar">
@@ -182,11 +182,12 @@
             <h1>Edit Reward</h1>
             <a href="#" class="delete-link" onclick="deleteReward(@Model.Id); return false;">Delete</a>
         </div>
-        <form method="post" enctype="multipart/form-data" asp-action="EditReward" asp-controller="Rewards">
+        <form method="post" enctype="multipart/form-data" asp-action="EditReward" asp-controller="MyReward">
+            @Html.AntiForgeryToken()
             <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
                 <label for="StreakId">Streak</label>
-                <select class="form-control" id="StreakId" name="StreakId" asp-items="@(new SelectList(ViewBag.Streaks ?? new List<Streaks>(), "Id", "Title", Model.StreakId))" required>
+                <select class="form-control" id="StreakId" name="StreakId" asp-items="@(new SelectList(ViewBag.Streaks ?? new List<SelectListItem>(), "Value", "Text", Model.StreakId))" required>
                     <option value="">Select Streak</option>
                 </select>
             </div>
@@ -200,17 +201,18 @@
             </div>
             <div class="form-group">
                 <label for="BusinessId">Business</label>
-                <select class="form-control" id="BusinessId" name="BusinessId" asp-items="@(new SelectList(ViewBag.Businesses ?? new List<StreakyAPi.Model.Responses.BusinessResponse>(), "Id", "Name", Model.BusinessId))" required>
+                <select class="form-control" id="BusinessId" name="BusinessId" asp-items="@(new SelectList(ViewBag.Businesses ?? new List<SelectListItem>(), "Value", "Text", Model.BusinessId))" required>
                     <option value="">Select Business</option>
                 </select>
             </div>
             <div class="form-group button-group">
-                <a href="@Url.Action("Index", "Rewards")" class="btn btn-secondary">Cancel</a>
+                <a href="@Url.Action("Index", "MyReward")" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
-    <form id="delete-form" method="post" asp-action="Delete" asp-controller="Rewards">
+    <form id="delete-form" method="post" asp-action="Delete" asp-controller="MyReward">
+        @Html.AntiForgeryToken()
         <input type="hidden" name="id" value="@Model.Id" />
     </form>
     <script>

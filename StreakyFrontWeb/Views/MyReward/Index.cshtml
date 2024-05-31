@@ -166,11 +166,11 @@
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList" class="active">Business</a>
-        <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index">Rewards</a>
-        <a href="/Account/profile">Account</a>
+        <a href="/StreakList/StreakList">Streak List</a>
+        <a href="/Business/List">Business</a>
+        <a href="/SecretDeal/List">Secret Deal</a>
+        <a href="/MyReward/Index" class="active">Rewards</a>
+        <a href="/Account/Profile">Account</a>
         <a href="#">Logout</a>
     </div>
     <div class="topbar">
@@ -188,7 +188,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3">Rewards List</h1>
-                <a href="@Url.Action("AddReward", "Rewards")" class="btn btn-primary">Add Reward</a>
+                <a href="@Url.Action("AddReward", "MyReward")" class="btn btn-primary">Add Reward</a>
             </div>
             @foreach (var reward in Model)
             {
@@ -203,10 +203,8 @@
                         </div>
                     </div>
                     <div class="reward-actions">
-                        <a href="@Url.Action("EditReward", "Rewards", new { id = reward.Id })" class="btn btn-primary">Edit</a>
-                        <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this reward?');">
-                            <input type="hidden" name="id" value="@reward.Id" />
-                        </form>
+                        <a href="@Url.Action("EditReward", "MyReward", new { id = reward.Id })" class="btn btn-primary">Edit</a>
+                        
                     </div>
                 </div>
             }
