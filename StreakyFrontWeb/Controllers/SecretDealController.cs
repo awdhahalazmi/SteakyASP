@@ -1,73 +1,143 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StreakyFrontWeb.Models;
-using System.Collections.Generic;
+using StreakyFrontWeb.API;
+using StreakyAPi.Model.Request;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace StreakyFrontWeb.Controllers
 {
     public class SecretDealController : Controller
     {
-        private static List<SecretDeal> secretDeals = new List<SecretDeal>
-        {
-            new SecretDeal { Id = 1, DealDate = "2024-05-01", Deal = "Special Offer", Streaks = "5", Business = "Pick" },
-            new SecretDeal { Id = 2, DealDate = "2024-05-02", Deal = "New Branch Opening", Streaks = "10", Business = "Ananas" }
-        };
+        private readonly StreakyAPI _streakyAPI;
 
-
-        public IActionResult List()
+        public SecretDealController(StreakyAPI streakyAPI)
         {
+            _streakyAPI = streakyAPI;
+        }
+
+        public async Task<IActionResult> List()
+        {
+            var secretDeals = await _streakyAPI.GetAllSecretDeals();
             return View(secretDeals);
         }
 
-
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> AddDeal()
         {
+            var streaks = await _streakyAPI.GetAllStreaks();
+            var businesses = await _streakyAPI.GetAllBusinesses();
+
+            ViewBag.Streaks = streaks.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.Title
+            }).ToList();
+
+            ViewBag.Businesses = businesses.Select(b => new SelectListItem
+            {
+                Value = b.Id.ToString(),
+                Text = b.Name
+            }).ToList();
+
             return View();
         }
 
-
         [HttpPost]
-        public IActionResult Add(SecretDeal secretDeal)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddDeal(SecretExperienceRequest request)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                secretDeal.Id = secretDeals.Count + 1;
-                secretDeals.Add(secretDeal);
+                var streaks = await _streakyAPI.GetAllStreaks();
+                var businesses = await _streakyAPI.GetAllBusinesses();
+
+                ViewBag.Streaks = streaks.Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Title
+                }).ToList();
+
+                ViewBag.Businesses = businesses.Select(b => new SelectListItem
+                {
+                    Value = b.Id.ToString(),
+                    Text = b.Name
+                }).ToList();
+
+                return View(request);
+            }
+
+            var success = await _streakyAPI.AddSecretExperience(request);
+
+            if (success)
+            {
                 return RedirectToAction("List");
             }
-            return View(secretDeal);
-        }
 
+            ModelState.AddModelError("", "An error occurred while adding the secret deal.");
+            return View(request);
+        }
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> EditDeal(int id)
         {
-            var secretDeal = secretDeals.Find(sd => sd.Id == id);
-            if (secretDeal == null)
+            var secretExperience = await _streakyAPI.GetSecretDealById(id);
+
+            if (secretExperience == null)
             {
                 return NotFound();
             }
-            return View(secretDeal);
+
+            var streaks = await _streakyAPI.GetAllStreaks();
+            var businesses = await _streakyAPI.GetAllBusinesses();
+
+            ViewBag.Streaks = streaks.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.Title
+            }).ToList();
+
+            ViewBag.Businesses = businesses.Select(b => new SelectListItem
+            {
+                Value = b.Id.ToString(),
+                Text = b.Name
+            }).ToList();
+
+            return View(secretExperience);
         }
 
         [HttpPost]
-        public IActionResult Edit(SecretDeal secretDeal)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDeal(SecretExperienceEditRequest request)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var existingDeal = secretDeals.Find(sd => sd.Id == secretDeal.Id);
-                if (existingDeal == null)
+                var streaks = await _streakyAPI.GetAllStreaks();
+                var businesses = await _streakyAPI.GetAllBusinesses();
+
+                ViewBag.Streaks = streaks.Select(s => new SelectListItem
                 {
-                    return NotFound();
-                }
+                    Value = s.Id.ToString(),
+                    Text = s.Title
+                }).ToList();
 
-                existingDeal.DealDate = secretDeal.DealDate;
-                existingDeal.Deal = secretDeal.Deal;
-                existingDeal.Streaks = secretDeal.Streaks;
-                existingDeal.Business = secretDeal.Business;
+                ViewBag.Businesses = businesses.Select(b => new SelectListItem
+                {
+                    Value = b.Id.ToString(),
+                    Text = b.Name
+                }).ToList();
 
+                return View(request);
+            }
+
+            var success = await _streakyAPI.EditSecretDeal(request.Id, request);
+
+            if (success)
+            {
                 return RedirectToAction("List");
             }
-            return View(secretDeal);
+
+            ModelState.AddModelError("", "An error occurred while editing the secret deal.");
+            return View(request);
         }
     }
 }

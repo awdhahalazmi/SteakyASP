@@ -39,6 +39,8 @@ namespace StreakyAPi.Controllers
             {
                 return NotFound("User not found");
             }
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
             var secretExperiences = await _context.SecretExperiences
                 .Include(se => se.Business)
                 .Select(se => new SecretExperienceResponse
@@ -50,8 +52,7 @@ namespace StreakyAPi.Controllers
                     Description = se.Description,
                     StreakClaimed = se.StreakClaimed,
                     BusinessName = se.Business.Name,
-                    BusinessImage = se.Business.Image
-
+                    BusinessImage = $"{baseUrl}/{se.Business.Image}"
                 })
                 .ToListAsync();
 

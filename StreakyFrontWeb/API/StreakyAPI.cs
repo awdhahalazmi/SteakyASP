@@ -248,6 +248,42 @@ namespace StreakyFrontWeb.API
             }
             return null;
         }
+        public async Task<List<SecretExperienceResponse>> GetAllSecretDeals()
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync("/SecretExperience");
+            if (response.IsSuccessStatusCode)
+            {
+                var secretDeals = await response.Content.ReadFromJsonAsync<List<SecretExperienceResponse>>();
+                return secretDeals;
+            }
+            return null;
+        }
+        public async Task<bool> AddSecretExperience(SecretExperienceRequest request)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.PostAsJsonAsync("/SecretExperience", request);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<bool> EditSecretDeal(int id, SecretExperienceEditRequest request)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.PutAsJsonAsync($"/SecretExperience/editSecretExperience/{id}", request);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<SecretExperienceResponse> GetSecretDealById(int id)
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync($"/SecretExperience/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var secretDeal = await response.Content.ReadFromJsonAsync<SecretExperienceResponse>();
+                return secretDeal;
+            }
+            return null;
+        }
+
 
     }
 }
