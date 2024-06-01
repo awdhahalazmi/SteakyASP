@@ -96,6 +96,11 @@ namespace StreakyFrontWeb.Controllers
             return View("Profile", profile);
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Login");
+        }
 
 
     }

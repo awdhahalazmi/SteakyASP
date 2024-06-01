@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StreakyAPi.Model;
@@ -97,7 +98,7 @@ namespace StreakyAPi.Controllers
                 Email = user.Email,
                 GenderId = user.GenderId,
                 ImagePath = $"{baseUrl}/{user.ImagePath}"
-               
+
             };
 
             return Ok(userProfile);
@@ -123,7 +124,7 @@ namespace StreakyAPi.Controllers
             }
             if (request.Image != null)
             {
-               
+
 
                 var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads", user.Id.ToString());
                 Directory.CreateDirectory(uploadsDir);
@@ -142,8 +143,8 @@ namespace StreakyAPi.Controllers
             return Ok(new { Message = "Profile updated successfully" });
         }
 
-    
-   
+
+
 
 
         [HttpGet("categories")]
@@ -294,8 +295,7 @@ namespace StreakyAPi.Controllers
 
             return Ok(new { Message = "Friend request accepted successfully" });
         }
-
-
+      
         [HttpGet("friendRequests")]
         public IActionResult GetFriendRequests()
         {
@@ -343,6 +343,8 @@ namespace StreakyAPi.Controllers
             }).ToList();
 
             return Ok(friends);
+
+
         }
     }
 }
