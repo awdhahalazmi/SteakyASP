@@ -1,11 +1,14 @@
-﻿@model StreakyAPi.Model.Business
+﻿@model StreakyAPi.Model.Request.BusinessRequest
+@{
+    ViewBag.Title = "Add Business";
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Business</title>
+    <title>@ViewBag.Title</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -165,9 +168,8 @@
         </div>
     </div>
     <div class="content">
-
-        <h1>Add Business</h1>
-        <form method="post" action="@Url.Action("AddBusiness", "Business")">
+        <h1>@ViewBag.Title</h1>
+        <form method="post" enctype="multipart/form-data" action="@Url.Action("AddBusiness", "Business")">
             <div class="form-group">
                 <label for="Name">Business Name</label>
                 <input type="text" class="form-control" id="Name" name="Name" required />
@@ -176,14 +178,15 @@
                 <label for="CategoryId">Category</label>
                 <select class="form-control" id="CategoryId" name="CategoryId" required>
                     <option value="">Select Category</option>
-                    <option value="1">Coffee Shops</option>
-                    <option value="2">Retail Shops</option>
-                    <option value="3">Leisure Activity</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
                 </select>
             </div>
             <div class="form-group">
                 <label for="Image">Image</label>
-                <input type="text" class="form-control" id="Image" name="Image" required />
+                <input type="file" class="form-control" id="Image" name="Image" required />
             </div>
             <div class="form-group">
                 <label for="Question">Question</label>
@@ -202,18 +205,37 @@
                 <input type="text" class="form-control" id="WrongAnswer2" name="WrongAnswer2" required />
             </div>
             <div class="form-group">
-                <label for="Location1">Location 1</label>
-                <input type="text" class="form-control" id="Location1" name="Locations[0].Name" required />
+                <label for="Question2">Question 2</label>
+                <input type="text" class="form-control" id="Question2" name="Question2" required />
             </div>
             <div class="form-group">
-                <label for="Location2">Location 2</label>
-                <input type="text" class="form-control" id="Location2" name="Locations[1].Name" required />
+                <label for="CorrectAnswerQ2">Correct Answer for Question 2</label>
+                <input type="text" class="form-control" id="CorrectAnswerQ2" name="CorrectAnswerQ2" required />
             </div>
-            <div class="form-group button-group">
-                <a href="@Url.Action("BusinessList", "Business")" class="btn btn-secondary">Cancel</a>
+            <div class="form-group">
+                <label for="WrongAnswerQ2_1">Wrong Answer 1 for Question 2</label>
+                <input type="text" class="form-control" id="WrongAnswerQ2_1" name="WrongAnswerQ2_1" required />
+            </div>
+            <div class="form-group">
+                <label for="WrongAnswerQ2_2">Wrong Answer 2 for Question 2</label>
+                <input type="text" class="form-control" id="WrongAnswerQ2_2" name="WrongAnswerQ2_2" required />
+            </div>
+            <div class="form-group">
+                <label for="LocationIds">Location</label>
+                <select class="form-control" id="LocationIds" name="LocationIds" multiple required>
+                    @foreach (var location in ViewBag.Locations)
+                    {
+                        <option value="@location.Id">@location.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="button-group">
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("BusinessList", "Business")'">Cancel</button>
             </div>
         </form>
+
+
     </div>
 </body>
 </html>

@@ -1,16 +1,27 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using StreakyFrontWeb.API;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using StreakyAPi.Model;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+
+
+
 // Configure HttpClient with base address
 builder.Services.AddHttpClient<StreakyAPI>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]);
 });
+
+// Add IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
 // Configure session
 builder.Services.AddSession(options =>
@@ -31,7 +42,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
-        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        policyBuilder => policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 var app = builder.Build();
@@ -42,6 +53,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -50,8 +63,7 @@ app.UseRouting();
 
 app.UseCors("AllowAllOrigins");
 
-app.UseAuthentication();
-app.UseAuthorization();
+
 
 app.UseSession();
 

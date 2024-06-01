@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using StreakyAPi.Model.Request;
 
 namespace StreakyFrontWeb.Controllers
 {
@@ -51,8 +52,8 @@ namespace StreakyFrontWeb.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    HttpContext.Session.SetString("Token", jwtToken);
-                    HttpContext.Response.Cookies.Append("Token", jwtToken);
+                    HttpContext.Session.SetString("AuthToken", jwtToken);
+                    HttpContext.Response.Cookies.Append("AuthToken", jwtToken);
 
                     _logger.LogInformation("User {Email} logged in successfully", request.Email);
                     return RedirectToAction("BusinessList", "Business");
@@ -69,5 +70,38 @@ namespace StreakyFrontWeb.Controllers
 
             return View(request);
         }
+        public async Task<IActionResult> Profile()
+        {
+            var profile = await _streakyAPI.GetProfile();
+            if (profile == null)
+            {
+                _logger.LogWarning("Profile not found.");
+                return RedirectToAction("Login");
+            }
+            return View(profile);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(EditProfileRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _streakyAPI.EditProfile(request);
+                if (result)
+                {
+                    return RedirectToAction("Profile");
+                }
+                ModelState.AddModelError(string.Empty, "Failed to update profile.");
+            }
+            var profile = await _streakyAPI.GetProfile();
+            return View("Profile", profile);
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Login");
+        }
+
+
     }
 }

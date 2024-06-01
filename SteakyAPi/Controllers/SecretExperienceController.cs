@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using StreakyAPi.Model.Reponses;
 using StreakyAPi.Model.Responses;
+using Microsoft.AspNetCore.Authorization;
+using StreakyAPi.Model.Token;
+
 
 namespace StreakyAPi.Controllers
 {
@@ -17,15 +20,27 @@ namespace StreakyAPi.Controllers
     public class SecretExperienceController : ControllerBase
     {
         private readonly StreakyContext _context;
+        private readonly IConfiguration _configuration;
 
-        public SecretExperienceController(StreakyContext context)
+
+        public SecretExperienceController(StreakyContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllSecretExperiences()
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
             var secretExperiences = await _context.SecretExperiences
                 .Include(se => se.Business)
                 .Select(se => new SecretExperienceResponse
@@ -37,8 +52,7 @@ namespace StreakyAPi.Controllers
                     Description = se.Description,
                     StreakClaimed = se.StreakClaimed,
                     BusinessName = se.Business.Name,
-                    BusinessImage = se.Business.Image
-
+                    BusinessImage = $"{baseUrl}/{se.Business.Image}"
                 })
                 .ToListAsync();
 
@@ -48,6 +62,12 @@ namespace StreakyAPi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSecretExperienceById(int id)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var secretExperience = await _context.SecretExperiences
                 .Include(se => se.Business)
                 .Select(se => new SecretExperienceResponse
@@ -75,6 +95,12 @@ namespace StreakyAPi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSecretExperience([FromBody] SecretExperienceRequest request)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var business = await _context.Businesses.FindAsync(request.BusinessId);
             if (business == null)
             {
@@ -100,6 +126,12 @@ namespace StreakyAPi.Controllers
         [HttpPut("editSecretExperience/{id}")]
         public async Task<IActionResult> UpdateSecretExperience(int id, [FromBody] SecretExperienceEditRequest updatedSecretExperience)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var existingSecretExperience = await _context.SecretExperiences
                 .Include(se => se.Business)
                 .FirstOrDefaultAsync(se => se.Id == id);
@@ -161,6 +193,12 @@ namespace StreakyAPi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSecretExperience(int id)
         {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
             var secretExperience = await _context.SecretExperiences.FindAsync(id);
 
             if (secretExperience == null)

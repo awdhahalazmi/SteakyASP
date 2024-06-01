@@ -1,4 +1,4 @@
-﻿@model StreakyAPi.Model.Business
+﻿@model StreakyAPi.Model.Request.BusinessUpdateRequest
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -23,26 +24,26 @@
             padding-top: 60px;
         }
 
-        .sidebar img {
-            display: block;
-            margin: 20px auto;
-            width: 150px;
-        }
+            .sidebar img {
+                display: block;
+                margin: 20px auto;
+                width: 150px;
+            }
 
-        .sidebar a {
-            display: block;
-            padding: 10px 20px;
-            color: #4A148C;
-            text-decoration: none;
-        }
+            .sidebar a {
+                display: block;
+                padding: 10px 20px;
+                color: #4A148C;
+                text-decoration: none;
+            }
 
-        .sidebar a:hover {
-            background: #e0dce3;
-        }
+                .sidebar a:hover {
+                    background: #e0dce3;
+                }
 
-        .sidebar .active {
-            background: #e0dce3;
-        }
+            .sidebar .active {
+                background: #e0dce3;
+            }
 
         .topbar {
             width: calc(100% - 250px);
@@ -58,51 +59,51 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .topbar .search-bar {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-        }
+            .topbar .search-bar {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+            }
 
-        .topbar .search-bar input {
-            width: 80%;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+                .topbar .search-bar input {
+                    width: 80%;
+                    padding: 5px 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
 
-        .topbar .profile-info {
-            display: flex;
-            align-items: center;
-        }
+            .topbar .profile-info {
+                display: flex;
+                align-items: center;
+            }
 
-        .topbar .profile-info .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e0dce3;
-            margin-right: 10px;
-        }
+                .topbar .profile-info .profile-pic {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #e0dce3;
+                    margin-right: 10px;
+                }
 
-        .topbar .profile-info span {
-            font-size: 16px;
-            color: #4A148C;
-            margin-right: 5px;
-        }
+                .topbar .profile-info span {
+                    font-size: 16px;
+                    color: #4A148C;
+                    margin-right: 5px;
+                }
 
-        .topbar .profile-info .dropdown-icon {
-            font-size: 12px;
-            color: #6c757d;
-        }
+                .topbar .profile-info .dropdown-icon {
+                    font-size: 12px;
+                    color: #6c757d;
+                }
 
-        .topbar .profile-info .notification-icon {
-            position: relative;
-        }
+                .topbar .profile-info .notification-icon {
+                    position: relative;
+                }
 
-        .topbar .profile-info .notification-icon img {
-            width: 20px;
-            height: 20px;
-        }
+                    .topbar .profile-info .notification-icon img {
+                        width: 20px;
+                        height: 20px;
+                    }
 
         .content {
             margin-left: 270px;
@@ -123,9 +124,9 @@
             border: none;
         }
 
-        .btn-primary:hover {
-            background-color: #4a148c;
-        }
+            .btn-primary:hover {
+                background-color: #4a148c;
+            }
 
         .btn-secondary {
             background-color: white;
@@ -133,13 +134,25 @@
             border: 1px solid #6a1b9a;
         }
 
-        .btn-secondary:hover {
-            background-color: #f0f2f5;
-        }
+            .btn-secondary:hover {
+                background-color: #f0f2f5;
+            }
 
         .button-group {
             display: flex;
             justify-content: space-between;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .delete-link {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -164,27 +177,25 @@
         </div>
     </div>
     <div class="content">
-        <h1>Edit Business</h1>
-        <form method="post" action="@Url.Action("EditBusiness", "Business")">
+        <div class="header">
+            <h1>Edit Business</h1>
+            <a href="#" class="delete-link" onclick="deleteBusiness(@Model.Id); return false;">Delete</a>
+        </div>
+        <form method="post" enctype="multipart/form-data" asp-action="EditBusiness" asp-controller="Business">
             <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
                 <label for="Name">Business Name</label>
                 <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
             </div>
             <div class="form-group">
-                <label for="Category">Category</label>
-                <select class="form-control" id="Category" name="Category" required>
+                <label for="CategoryId">Category</label>
+                <select class="form-control" id="CategoryId" name="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name", Model.CategoryId))" required>
                     <option value="">Select Category</option>
-                    <option value="Coffee Shops">Coffee Shops</option>
-                    <option value="Retail Shops">Retail Shops</option>
-                    <option value="Leisure Activity">Leisure Activity</option>
                 </select>
             </div>
-
-
             <div class="form-group">
                 <label for="Image">Image</label>
-                <input type="text" class="form-control" id="Image" name="Image" value="@Model.Image" required />
+                <input type="file" class="form-control" id="Image" name="Image" />
             </div>
             <div class="form-group">
                 <label for="Question">Question</label>
@@ -203,12 +214,25 @@
                 <input type="text" class="form-control" id="WrongAnswer2" name="WrongAnswer2" value="@Model.WrongAnswer2" required />
             </div>
             <div class="form-group">
-                <label for="Location1">Location 1</label>
-                <input type="text" class="form-control" id="Location1" name="Locations[0].Name" value="@Model.Locations.ElementAtOrDefault(0)?.Name" required />
+                <label for="Question2">Question 2</label>
+                <input type="text" class="form-control" id="Question2" name="Question2" value="@Model.Question2" required />
             </div>
             <div class="form-group">
-                <label for="Location2">Location 2</label>
-                <input type="text" class="form-control" id="Location2" name="Locations[1].Name" value="@Model.Locations.ElementAtOrDefault(1)?.Name" required />
+                <label for="CorrectAnswerQ2">Correct Answer Q2</label>
+                <input type="text" class="form-control" id="CorrectAnswerQ2" name="CorrectAnswerQ2" value="@Model.CorrectAnswerQ2" required />
+            </div>
+            <div class="form-group">
+                <label for="WrongAnswerQ2_1">Wrong Answer Q2_1</label>
+                <input type="text" class="form-control" id="WrongAnswerQ2_1" name="WrongAnswerQ2_1" value="@Model.WrongAnswerQ2_1" required />
+            </div>
+            <div class="form-group">
+                <label for="WrongAnswerQ2_2">Wrong Answer Q2_2</label>
+                <input type="text" class="form-control" id="WrongAnswerQ2_2" name="WrongAnswerQ2_2" value="@Model.WrongAnswerQ2_2" required />
+            </div>
+            <div class="form-group">
+                <label for="LocationIds">Locations</label>
+                <select class="form-control" id="LocationIds" name="LocationIds" asp-items="@(new MultiSelectList(ViewBag.Locations, "Id", "Name", Model.LocationIds))" multiple>
+                </select>
             </div>
             <div class="form-group button-group">
                 <a href="@Url.Action("BusinessList", "Business")" class="btn btn-secondary">Cancel</a>
@@ -216,5 +240,15 @@
             </div>
         </form>
     </div>
+    <form id="delete-form" method="post" asp-action="DeleteBusiness" asp-controller="Business">
+        <input type="hidden" name="id" value="@Model.Id" />
+    </form>
+    <script>
+        function deleteBusiness(id) {
+            if (confirm('Are you sure you want to delete this business?')) {
+                document.getElementById('delete-form').submit();
+            }
+        }
+    </script>
 </body>
 </html>

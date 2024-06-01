@@ -1,11 +1,11 @@
-﻿@model StreakyAPi.Model.Request.StreakRequest
+﻿@model StreakyAPi.Model.Request.SecretExperienceEditRequest
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Streak</title>
+    <title>Edit Secret Deal</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -129,8 +129,9 @@
             }
 
         .btn-secondary {
-            border: 1px solid #6a1b9a;
+            background-color: white;
             color: #6a1b9a;
+            border: 1px solid #6a1b9a;
         }
 
             .btn-secondary:hover {
@@ -141,17 +142,30 @@
             display: flex;
             justify-content: space-between;
         }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .delete-link {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="@Url.Action("StreakList", "StreakList")" class="active">Streak List</a>
-        <a href="@Url.Action("BusinessList", "Business")">Business</a>
-        <a href="@Url.Action("Profile", "Account")">Account</a>
-        <a href="@Url.Action("Logout", "Account")">Logout</a>
+        <a href="/StreakList/StreakList">Streak List</a>
+        <a href="/Business/List">Business</a>
+        <a href="/SecretDeal/List" class="active">Secret Deal</a>
+        <a href="/MyReward/Index">Rewards</a>
+        <a href="/Account/Profile">Account</a>
+        <a href="#">Logout</a>
     </div>
-
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -163,41 +177,56 @@
         </div>
     </div>
     <div class="content">
-        <h1>Add Streak</h1>
-        <form asp-action="AddStreak" asp-controller="StreakList" method="post">
-            <div class="form-group">
-                <label for="Title">Title</label>
-                <input type="text" class="form-control" id="Title" name="Title" required />
-            </div>
-            <div class="form-group">
-                <label for="Description">Description</label>
-                <input type="text" class="form-control" id="Description" name="Description" required />
-            </div>
-            <div class="form-group">
-                <label for="BusinessIds">Businesses</label>
-                <select class="form-control" id="BusinessIds" name="BusinessIds" multiple required>
-                    @foreach (var business in ViewBag.Businesses)
-                    {
-                        <option value="@business.Id">@business.Name</option>
-                    }
-                </select>
-            </div>
+        <div class="header">
+            <h1>Edit Secret Deal</h1>
+            <a href="#" class="delete-link" onclick="deleteSecretDeal(@Model.Id); return false;">Delete</a>
+        </div>
+        <form method="post" enctype="multipart/form-data" asp-action="EditDeal" asp-controller="SecretDeal">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
                 <label for="StartDate">Start Date</label>
-                <input type="date" class="form-control" id="StartDate" name="StartDate" required />
+                <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" required />
             </div>
             <div class="form-group">
                 <label for="EndDate">End Date</label>
-                <input type="date" class="form-control" id="EndDate" name="EndDate" required />
+                <input type="date" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="form-group">
+                <label for="Title">Title</label>
+                <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <textarea class="form-control" id="Description" name="Description" required>@Model.Description</textarea>
+            </div>
+            <div class="form-group">
+                <label for="StreakClaimed">Streak Claimed</label>
+                <input type="number" class="form-control" id="StreakClaimed" name="StreakClaimed" value="@Model.StreakClaimed" required />
+            </div>
+            <div class="form-group">
+                <label for="BusinessId">Business</label>
+                <select class="form-control" id="BusinessId" name="BusinessId" asp-items="@(new SelectList(ViewBag.Businesses ?? new List<SelectListItem>(), "Value", "Text", Model.BusinessId))" required>
+                    <option value="">Select Business</option>
+                </select>
             </div>
             <div class="form-group button-group">
-                <button type="submit" class="btn btn-primary">Add Streak</button>
-                <a href="@Url.Action("StreakList", "StreakList")" class="btn btn-secondary">Cancel</a>
+                <a href="@Url.Action("List", "SecretDeal")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <form id="delete-form" method="post" asp-action="Delete" asp-controller="SecretDeal">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+    </form>
+    <script>
+        function deleteSecretDeal(id) {
+            if (confirm('Are you sure you want to delete this secret deal?')) {
+                var form = document.getElementById('delete-form');
+                form.submit();
+            }
+        }
+    </script>
 </body>
 </html>

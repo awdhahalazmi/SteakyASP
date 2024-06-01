@@ -1,11 +1,11 @@
-﻿@model IEnumerable<StreakyAPi.Model.Responses.BusinessResponse>
+﻿@model StreakyAPi.Model.Request.SecretExperienceRequest
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business List</title>
+    <title>Add Secret Deal</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -13,46 +13,6 @@
             margin: 0;
             padding: 0;
         }
-
-        .business-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-            .business-card img {
-                height: 50px;
-                margin-right: 20px;
-            }
-
-        .business-details {
-            flex-grow: 1;
-        }
-
-        .business-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-primary, .btn-secondary {
-            background-color: #6a1b9a;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-            .btn-primary:hover, .btn-secondary:hover {
-                background-color: #4a148c;
-            }
 
         .sidebar {
             width: 250px;
@@ -62,7 +22,6 @@
             left: 0;
             background: #f0f2f5;
             padding-top: 60px;
-            overflow-y: auto;
         }
 
             .sidebar img {
@@ -98,7 +57,6 @@
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
         }
 
             .topbar .search-bar {
@@ -150,27 +108,63 @@
         .content {
             margin-left: 270px;
             padding-top: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            padding: 20px;
         }
 
-            .content .container {
-                width: 100%;
-                max-width: 900px;
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #6a1b9a;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #4a148c;
             }
+
+        .btn-secondary {
+            background-color: white;
+            color: #6a1b9a;
+            border: 1px solid #6a1b9a;
+        }
+
+            .btn-secondary:hover {
+                background-color: #f0f2f5;
+            }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .delete-link {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList" class="active">Business</a>
-        <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index">Rewards</a>
-        <a href="/Account/profile">Account</a>
-        <a href="@Url.Action("Logout", "Account")">Logout</a>
+        <a href="/StreakList/StreakList">Streak List</a>
+        <a href="/Business/List">Business</a>
+        <a href="/SecretDeal/List" class="active">Secret Deal</a>
+        <a href="/MyReward/Index">Rewards</a>
+        <a href="/Account/Profile">Account</a>
+        <a href="#">Logout</a>
     </div>
     <div class="topbar">
         <div class="search-bar">
@@ -182,33 +176,45 @@
             <span class="dropdown-icon">&#x25BC;</span>
         </div>
     </div>
-
     <div class="content">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">Business List</h1>
-                <a href="@Url.Action("AddBusiness", "Business")" class="btn btn-primary">Add Partner</a>
+        <h1>Add Secret Deal</h1>
+        <form method="post" enctype="multipart/form-data" asp-action="AddDeal" asp-controller="SecretDeal">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="StartDate">Start Date</label>
+                <input type="date" class="form-control" id="StartDate" name="StartDate" required />
             </div>
-            @foreach (var business in Model)
-            {
-                <div class="business-card">
-                    <div class="d-flex align-items-center">
-                        <img src="@business.Image" alt="@business.Name">
-                        <div class="business-details">
-                            <h2 class="h5 mb-1">@business.Name</h2>
-                            <p class="mb-0">@business.CategoryName</p>
-                            <p class="mb-0 text-muted">@business.Question</p>
-                        </div>
-                    </div>
-                    <div class="business-actions">
-                        <a href="@Url.Action("EditBusiness", "Business", new { id = business.Id })" class="btn btn-primary">Edit</a>
-                    </div>
-                </div>
-            }
-        </div>
+            <div class="form-group">
+                <label for="EndDate">End Date</label>
+                <input type="date" class="form-control" id="EndDate" name="EndDate" required />
+            </div>
+            <div class="form-group">
+                <label for="Title">Title</label>
+                <input type="text" class="form-control" id="Title" name="Title" required />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <textarea class="form-control" id="Description" name="Description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="StreakClaimed">Streak Claimed</label>
+                <input type="number" class="form-control" id="StreakClaimed" name="StreakClaimed" required />
+            </div>
+            <div class="form-group">
+                <label for="BusinessId">Business</label>
+                <select class="form-control" id="BusinessId" name="BusinessId" required>
+                    <option value="">Select Business</option>
+                    @foreach (var business in ViewBag.Businesses)
+                    {
+                        <option value="@business.Value">@business.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("List", "SecretDeal")'">Cancel</button>
+            </div>
+        </form>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
