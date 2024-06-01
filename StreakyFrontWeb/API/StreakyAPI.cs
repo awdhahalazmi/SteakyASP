@@ -283,7 +283,23 @@ namespace StreakyFrontWeb.API
             }
             return null;
         }
+        public async Task<bool> DeleteSecretDeal(int id)
+        {
+            try
+            {
+                AddAuthTokenHeader();
+                var response = await _api.DeleteAsync($"/SecretExperience/{id}");
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                // Handle exception if necessary
+                return false;
+            }
 
 
+
+        }
     }
 }
+

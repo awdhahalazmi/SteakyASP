@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StreakyFrontWeb.API;
 using StreakyAPi.Model.Request;
+using StreakyAPi.Model.Responses;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -102,8 +103,19 @@ namespace StreakyFrontWeb.Controllers
                 Text = b.Name
             }).ToList();
 
-            return View(secretExperience);
+            var editModel = new SecretExperienceEditRequest
+            {
+                Id = secretExperience.Id,
+                StartDate = secretExperience.StartDate,
+                EndDate = secretExperience.EndDate,
+                Title = secretExperience.Title,
+                Description = secretExperience.Description,
+                StreakClaimed = secretExperience.StreakClaimed,
+            };
+
+            return View(editModel);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -138,6 +150,20 @@ namespace StreakyFrontWeb.Controllers
 
             ModelState.AddModelError("", "An error occurred while editing the secret deal.");
             return View(request);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var success = await _streakyAPI.DeleteSecretDeal(id);
+
+            if (success)
+            {
+                return RedirectToAction("List");
+            }
+
+            ModelState.AddModelError("", "An error occurred while deleting the secret deal.");
+            return RedirectToAction("EditDeal", new { id });
         }
     }
 }
