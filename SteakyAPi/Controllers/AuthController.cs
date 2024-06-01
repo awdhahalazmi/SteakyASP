@@ -6,6 +6,7 @@ using StreakyAPi.Model.Auth;
 using StreakyAPi.Model.Reponses;
 using StreakyAPi.Model.Request;
 using StreakyAPi.Model.Token;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace StreakyAPi.Controllers
 {
@@ -88,14 +89,15 @@ namespace StreakyAPi.Controllers
             {
                 return NotFound("User not found");
             }
-
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
             var userProfile = new ProfileResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 GenderId = user.GenderId,
-                ImagePath = user.ImagePath
+                ImagePath = $"{baseUrl}/{user.ImagePath}"
+               
             };
 
             return Ok(userProfile);
@@ -115,23 +117,26 @@ namespace StreakyAPi.Controllers
 
 
             user.Name = request.Name;
-            user.GenderId = request.GenderId;
-
-            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(),
-                                        "uploads", user.Id.ToString()));
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(),
-                                        "uploads", user.Id.ToString(),
-                                        request.Image.FileName);
-
-            using (var stream = System.IO.File.Create(filePath))
+            if (request.GenderId.HasValue)
             {
-                await request.Image.CopyToAsync(stream);
+                user.GenderId = request.GenderId.Value;
             }
+            if (request.Image != null)
+            {
+               
 
+                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads", user.Id.ToString());
+                Directory.CreateDirectory(uploadsDir);
 
+                var filePath = Path.Combine(uploadsDir, request.Image.FileName);
 
-            user.ImagePath = $"uploads/{user.Id}/{request.Image.FileName}";
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await request.Image.CopyToAsync(stream);
+                }
+
+                user.ImagePath = $"uploads/{user.Id}/{request.Image.FileName}";
+            }
             _context.SaveChanges();
 
             return Ok(new { Message = "Profile updated successfully" });

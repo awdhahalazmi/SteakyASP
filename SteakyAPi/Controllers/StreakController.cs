@@ -126,6 +126,10 @@ namespace StreakyAPi.Controllers
                     CorrectAnswer = b.CorrectAnswer,
                     WrongAnswer1 = b.WrongAnswer1,
                     WrongAnswer2 = b.WrongAnswer2,
+                    Question2 = b.Question2,
+                    CorrectAnswerQ2 = b.CorrectAnswerQ2,
+                    WrongAnswerQ2_1 = b.WrongAnswerQ2_1,
+                    WrongAnswerQ2_2 = b.WrongAnswerQ2_2,
                     Locations = b.Locations?.Select(l => new LocationResponse
                     {
                         Id = l.Id,

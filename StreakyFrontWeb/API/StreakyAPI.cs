@@ -49,6 +49,36 @@ namespace StreakyFrontWeb.API
             }
             return string.Empty;
         }
+        public async Task<ProfileResponse> GetProfile()
+        {
+            AddAuthTokenHeader();
+            var response = await _api.GetAsync("/auth/profile");
+            if (response.IsSuccessStatusCode)
+            {
+                var profile = await response.Content.ReadFromJsonAsync<ProfileResponse>();
+                return profile;
+            }
+            return null;
+        }
+        public async Task<bool> EditProfile(EditProfileRequest request)
+        {
+            AddAuthTokenHeader();
+
+            using (var content = new MultipartFormDataContent())
+            {
+                content.Add(new StringContent(request.Name), "Name");
+                content.Add(new StringContent(request.GenderId.ToString()), "GenderId");
+
+                if (request.Image != null)
+                {
+                    var imageContent = new StreamContent(request.Image.OpenReadStream());
+                    content.Add(imageContent, "Image", request.Image.FileName);
+                }
+
+                var response = await _api.PostAsync("/auth/profile", content);
+                return response.IsSuccessStatusCode;
+            }
+        }
 
         public async Task<List<BusinessResponse>> GetAllBusinesses()
         {
@@ -297,6 +327,7 @@ namespace StreakyFrontWeb.API
                 return false;
             }
 
+       
 
 
         }
