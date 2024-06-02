@@ -1,11 +1,14 @@
-﻿@model StreakyAPi.Model.Business
+﻿@model StreakyFrontWeb.Models.SecretDeal
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Business</title>
+
+
+
+    <title>Edit Secret Deal</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -13,6 +16,7 @@
             margin: 0;
             padding: 0;
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -20,13 +24,16 @@
             top: 0;
             left: 0;
             background: #f0f2f5;
-            padding-top: 60px;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .sidebar img {
             display: block;
-            margin: 20px auto;
             width: 150px;
+            margin-bottom: 20px;
         }
 
         .sidebar a {
@@ -34,6 +41,8 @@
             padding: 10px 20px;
             color: #4A148C;
             text-decoration: none;
+            width: 100%;
+            text-align: center;
         }
 
         .sidebar a:hover {
@@ -103,7 +112,6 @@
             width: 20px;
             height: 20px;
         }
-
         .content {
             margin-left: 270px;
             padding-top: 80px;
@@ -118,23 +126,35 @@
             margin-bottom: 10px;
         }
 
-        .btn-primary {
-            background-color: #6a1b9a;
+        .btn-custom {
+            background-color: #4A148C;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
             border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        .btn-primary:hover {
-            background-color: #4a148c;
+        .btn-custom:hover {
+            background-color: #380a62;
         }
 
-        .btn-secondary {
+        .btn-secondary-custom {
             background-color: white;
-            color: #6a1b9a;
-            border: 1px solid #6a1b9a;
+            color: #4A148C;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #4A148C;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .btn-secondary:hover {
-            background-color: #f0f2f5;
+        .btn-secondary-custom:hover {
+            background-color: #4A148C;
+            color: white;
         }
 
         .button-group {
@@ -143,16 +163,20 @@
         }
     </style>
 </head>
+
+
+
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
         <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList" class="active">Business</a>
-        <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index">Rewards</a>
+        <a href="Business/">Business</a>
+        <a href="SecretDeal" class="active">Secret Deals</a>
+        <a href="/Rewards/index">Rewards/</a>
         <a href="/Account/profile">Account</a>
-        <a href="#">Logout</a>
+        <a href="/Account/Login">Logout</a>
     </div>
+
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -161,58 +185,45 @@
             <div class="profile-pic"></div>
             <span>Admin</span>
             <span class="dropdown-icon">&#x25BC;</span>
+            <div class="notification-icon">
+                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
+            </div>
         </div>
+
+
+
+
+
     </div>
     <div class="content">
-        <h1>Edit Business</h1>
-        <form method="post" action="@Url.Action("EditBusiness", "Business")">
+        <h1>Edit Secret Deal</h1>
+        <form method="post" action="@Url.Action("Edit", "SecretDeal")">
             <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
-                <label for="Name">Business Name</label>
-                <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                <label for="DealDate">Deal Date</label>
+                <input type="text" class="form-control" id="DealDate" name="DealDate" value="@Model.DealDate" required />
             </div>
             <div class="form-group">
-                <label for="Category">Category</label>
-                <select class="form-control" id="Category" name="Category" required>
-                    <option value="">Select Category</option>
-                    <option value="Coffee Shops">Coffee Shops</option>
-                    <option value="Retail Shops">Retail Shops</option>
-                    <option value="Leisure Activity">Leisure Activity</option>
+                <label for="Deal">Deal</label>
+                <input type="text" class="form-control" id="Deal" name="Deal" value="@Model.Deal" required />
+            </div>
+            <div class="form-group">
+                <label for="Streaks">Streaks</label>
+                <input type="text" class="form-control" id="Streaks" name="Streaks" value="@Model.Streaks" required />
+            </div>
+            <div class="form-group">
+                <label for="Business">Business</label>
+                <select class="form-control" id="Business" name="Business" required>
+                    <option value="">Select Business</option>
+                    
                 </select>
             </div>
 
 
-            <div class="form-group">
-                <label for="Image">Image</label>
-                <input type="text" class="form-control" id="Image" name="Image" value="@Model.Image" required />
-            </div>
-            <div class="form-group">
-                <label for="Question">Question</label>
-                <input type="text" class="form-control" id="Question" name="Question" value="@Model.Question" required />
-            </div>
-            <div class="form-group">
-                <label for="CorrectAnswer">Correct Answer</label>
-                <input type="text" class="form-control" id="CorrectAnswer" name="CorrectAnswer" value="@Model.CorrectAnswer" required />
-            </div>
-            <div class="form-group">
-                <label for="WrongAnswer1">Wrong Answer 1</label>
-                <input type="text" class="form-control" id="WrongAnswer1" name="WrongAnswer1" value="@Model.WrongAnswer1" required />
-            </div>
-            <div class="form-group">
-                <label for="WrongAnswer2">Wrong Answer 2</label>
-                <input type="text" class="form-control" id="WrongAnswer2" name="WrongAnswer2" value="@Model.WrongAnswer2" required />
-            </div>
-            <div class="form-group">
-                <label for="Location1">Location 1</label>
-                <input type="text" class="form-control" id="Location1" name="Locations[0].Name" value="@Model.Locations.ElementAtOrDefault(0)?.Name" required />
-            </div>
-            <div class="form-group">
-                <label for="Location2">Location 2</label>
-                <input type="text" class="form-control" id="Location2" name="Locations[1].Name" value="@Model.Locations.ElementAtOrDefault(1)?.Name" required />
-            </div>
+
             <div class="form-group button-group">
-                <a href="@Url.Action("BusinessList", "Business")" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn-custom">Save</button>
+                <a href="@Url.Action("List", "SecretDeal")" class="btn-secondary-custom">Cancel</a>
             </div>
         </form>
     </div>

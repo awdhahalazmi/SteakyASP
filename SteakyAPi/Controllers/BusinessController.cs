@@ -6,8 +6,6 @@ using StreakyAPi.Model.Responses;
 using Microsoft.EntityFrameworkCore;
 using StreakyAPi.Model.Reponses;
 using StreakyAPi.Model.Token;
-using Microsoft.AspNetCore.Authorization;
-
 using Azure.Core;
 
 namespace StreakyAPi.Controllers
@@ -17,25 +15,15 @@ namespace StreakyAPi.Controllers
     public class BusinessController : ControllerBase
     {
         private readonly StreakyContext _context;
-        private readonly IConfiguration _configuration;
 
-
-        public BusinessController(StreakyContext context, IConfiguration configuration)
+        public BusinessController(StreakyContext context)
         {
             _context = context;
-            _configuration = configuration;
-
         }
 
         [HttpPost("addLocation")]
         public async Task<IActionResult> AddLocation([FromBody] LocationRequest request)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             if (string.IsNullOrEmpty(request.Name))
             {
                 return BadRequest("Location name is required");
@@ -69,12 +57,6 @@ namespace StreakyAPi.Controllers
         [HttpGet("getLocation/{id}")]
         public async Task<IActionResult> GetLocationById(int id)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var location = await _context.Locations.FindAsync(id);
             if (location == null)
             {
@@ -97,12 +79,6 @@ namespace StreakyAPi.Controllers
         [HttpGet("getAllLocations")]
         public async Task<IActionResult> GetAllLocations()
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var locations = await _context.Locations.ToListAsync();
             var response = locations.Select(location => new LocationResponse
             {
@@ -175,12 +151,6 @@ namespace StreakyAPi.Controllers
         [HttpGet("getBusinesses")]
         public async Task<IActionResult> GetBusinesses()
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
 
             var businesses = await _context.Businesses
@@ -221,12 +191,6 @@ namespace StreakyAPi.Controllers
         [HttpPut("editBusiness/{id}")]
         public async Task<IActionResult> EditBusiness(int id, [FromForm] BusinessUpdateRequest request)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var business = await _context.Businesses.FindAsync(id);
             if (business == null)
             {
@@ -322,12 +286,6 @@ namespace StreakyAPi.Controllers
         [HttpDelete("deleteBusiness/{id}")]
         public async Task<IActionResult> DeleteBusiness(int id)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var business = await _context.Businesses
                 .Include(b => b.Locations)
                 .FirstOrDefaultAsync(b => b.Id == id);
@@ -352,12 +310,6 @@ namespace StreakyAPi.Controllers
         [HttpGet("getBusiness/{id}")]
         public async Task<IActionResult> GetBusinessById(int id)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var business = await _context.Businesses
                 .Include(b => b.Category)
                 .Include(b => b.Locations)

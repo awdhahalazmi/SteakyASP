@@ -1,10 +1,12 @@
-﻿@model IEnumerable<StreakyAPi.Model.Reponses.SecretExperienceResponse>
+﻿@model IEnumerable<StreakyFrontWeb.Models.SecretDeal>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
     <title>Secret Deals</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -26,10 +28,7 @@
 
             .deal-card img {
                 height: 50px;
-                width: 50px;
                 margin-right: 20px;
-                object-fit: cover;
-                border-radius: 50%;
             }
 
         .deal-details {
@@ -44,7 +43,7 @@
         .btn-primary, .btn-secondary {
             background-color: #6a1b9a;
             border: none;
-            border-radius: 5px;
+            border-radius: 5px; 
             padding: 10px 20px;
             color: white;
             text-decoration: none;
@@ -163,16 +162,20 @@
             }
     </style>
 </head>
+
+
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="/StreakList">Streak List</a>
-        <a href="/Business">Business</a>
-        <a href="/SecretDeal" class="active">Secret Deals</a>
-        <a href="/Rewards">Rewards</a>
-        <a href="/Account/Profile">Account</a>
+        <a href="StreakList/StreakList">Streak List</a>
+        <a href="Business/">Business</a>
+        <a href="SecretDeal" class="active">Secret Deals</a>
+        <a href="/Rewards/index">Rewards/</a>
+        <a href="/Account/profile">Account</a>
         <a href="/Account/Login">Logout</a>
     </div>
+
+
 
     <div class="topbar">
         <div class="search-bar">
@@ -186,35 +189,37 @@
                 <img src="https://via.placeholder.com/20" alt="Notification Bell" />
             </div>
         </div>
-    </div>
 
+
+    </div>
     <div class="content">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3">Secret Deals</h1>
-                <a href="@Url.Action("AddDeal", "SecretDeal")" class="btn btn-primary">Add Secret Deal</a>
+                <a href="@Url.Action("Add", "SecretDeal")" class="btn btn-primary">Add Secret Deal</a>
             </div>
+
+
 
             @foreach (var secretDeal in Model)
             {
                 <div class="deal-card">
                     <div class="d-flex align-items-center">
-                        <img src="@secretDeal.BusinessImage" alt="@secretDeal.BusinessName">
                         <div class="deal-details">
-                            <h2 class="h5 mb-1">@secretDeal.BusinessName</h2>
-                            <p class="mb-0">@secretDeal.Title</p>
-                            <p class="mb-0">@secretDeal.Description</p>
-                            <p class="mb-0">@secretDeal.StartDate.ToString("yyyy-MM-dd") - @secretDeal.EndDate.ToString("yyyy-MM-dd")</p>
-                            <p class="mb-0">Streak Claimed: @secretDeal.StreakClaimed</p>
-                        </div>
+                            <h2 class="h5 mb-1">@secretDeal.Business</h2>
+                            <p class="mb-0">@secretDeal.Deal</p>
+@*                            // <p class="mb-0 text-muted">@secretDeal.DealDate.ToString("2001-20-20")</p>
+ *@                        </div>
                     </div>
                     <div class="deal-actions">
-                        <a href="@Url.Action("EditDeal", "SecretDeal", new { id = secretDeal.Id })" class="btn btn-secondary">Edit</a>
+                        <a href="@Url.Action("Edit", "SecretDeal", new { id = secretDeal.Id })" class="btn btn-secondary">Edit</a>
                     </div>
                 </div>
             }
         </div>
     </div>
+
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

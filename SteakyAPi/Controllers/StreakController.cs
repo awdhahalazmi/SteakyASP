@@ -9,8 +9,6 @@ using StreakyAPi.Model.Token;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization; 
-
 
 namespace StreakyAPi.Controllers
 {
@@ -19,25 +17,15 @@ namespace StreakyAPi.Controllers
     public class StreakController : ControllerBase
     {
         private readonly StreakyContext _context;
-        private readonly IConfiguration _configuration;
 
-
-        public StreakController(StreakyContext context, IConfiguration configuration)
+        public StreakController(StreakyContext context)
         {
             _context = context;
-            _configuration = configuration;
-
         }
 
         [HttpPost("addStreak")]
         public async Task<IActionResult> AddStreak([FromBody] StreakRequest request)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var businesses = await _context.Businesses
                 .Where(b => request.BusinessIds.Contains(b.Id))
                 .ToListAsync();
@@ -92,16 +80,61 @@ namespace StreakyAPi.Controllers
             return Ok(new { Message = "Streak created", Streak = response });
         }
 
-       
+        //[HttpPost("startStreak/{streakId}")]
+        //public async Task<IActionResult> StartStreak(int streakId)
+        //{
+        //    var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        //    if (user == null)
+        //    {
+        //        return NotFound("User not found");
+        //    }
+
+        //    var streak = await _context.Streaks
+        //        .Include(s => s.Businsses)
+        //        .ThenInclude(b => b.Locations)
+        //        .FirstOrDefaultAsync(s => s.Id == streakId);
+        //    if (streak == null)
+        //    {
+        //        return NotFound("Streak not found");
+        //    }
+
+        //    var userStreak = new UserStreak
+        //    {
+        //        UserId = user.Id,
+        //        StreakId = streak.Id,
+        //        StartDate = DateTime.Now,
+        //        EndDate = streak.EndDate
+        //    };
+
+        //    _context.UserStreaks.Add(userStreak);
+        //    await _context.SaveChangesAsync();
+
+        //    var response = new
+        //    {
+        //        StreakId = streak.Id,
+        //        StreakTitle = streak.Title,
+        //        Businesses = streak.Businsses.Select(b => new
+        //        {
+        //            b.Name,
+        //            Locations = b.Locations.Select(l => new LocationResponse
+        //            {
+        //                Id = l.Id,
+        //                Name = l.Name,
+        //                URL = l.URL,
+        //                Radius = l.Radius,
+        //                Latitude = l.Latitude,
+        //                Longitude = l.Longitude
+        //            }).ToList()
+        //        }).ToList()
+        //    };
+
+        //    return Ok(response);
+        //}
+
         [HttpGet("getAllStreaks")]
         public async Task<IActionResult> GetAllStreaks()
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var streaks = await _context.Streaks
                 .Include(s => s.Businsses)
                     .ThenInclude(b => b.Locations)
@@ -126,10 +159,6 @@ namespace StreakyAPi.Controllers
                     CorrectAnswer = b.CorrectAnswer,
                     WrongAnswer1 = b.WrongAnswer1,
                     WrongAnswer2 = b.WrongAnswer2,
-                    Question2 = b.Question2,
-                    CorrectAnswerQ2 = b.CorrectAnswerQ2,
-                    WrongAnswerQ2_1 = b.WrongAnswerQ2_1,
-                    WrongAnswerQ2_2 = b.WrongAnswerQ2_2,
                     Locations = b.Locations?.Select(l => new LocationResponse
                     {
                         Id = l.Id,
@@ -148,12 +177,6 @@ namespace StreakyAPi.Controllers
         [HttpPut("editStreak/{streakId}")]
         public async Task<IActionResult> EditStreak(int streakId, [FromBody] StreakRequest request)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var streak = await _context.Streaks
                 .Include(s => s.Businsses)
                 .FirstOrDefaultAsync(s => s.Id == streakId);
@@ -184,71 +207,9 @@ namespace StreakyAPi.Controllers
             return Ok(new { Message = "Streak updated" });
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetStreakById(int id)
-        {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
-            var streak = await _context.Streaks
-                .Include(s => s.Businsses)
-                    .ThenInclude(b => b.Locations)
-                .Include(s => s.Businsses)
-                    .ThenInclude(b => b.Category)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (streak == null)
-            {
-                return NotFound("Streak not found");
-            }
-
-            var response = new StreakResponse
-            {
-                Id = streak.Id,
-                Title = streak.Title,
-                Description = streak.Description,
-                StartDate = streak.StartDate,
-                EndDate = streak.EndDate,
-                Businesses = streak.Businsses.Select(b => new BusinessResponse
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                    CategoryId = b.CategoryId,
-                    Image = b.Image,
-                    Question = b.Question,
-                    CorrectAnswer = b.CorrectAnswer,
-                    WrongAnswer1 = b.WrongAnswer1,
-                    WrongAnswer2 = b.WrongAnswer2,
-                    Locations = b.Locations?.Select(l => new LocationResponse
-                    {
-                        Id = l.Id,
-                        Name = l.Name,
-                        URL = l.URL,
-                        Radius = l.Radius,
-                        Latitude = l.Latitude,
-                        Longitude = l.Longitude
-                    }).ToList() ?? new List<LocationResponse>(),
-                    CategoryName = b.Category?.Name
-                }).ToList()
-            };
-
-            return Ok(response);
-        }
-
-
-
         [HttpDelete("deleteStreak/{streakId}")]
         public async Task<IActionResult> DeleteStreak(int streakId)
         {
-            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
             var streak = await _context.Streaks.FindAsync(streakId);
 
             if (streak == null)
@@ -264,7 +225,6 @@ namespace StreakyAPi.Controllers
         [HttpGet("getUserStreaks")]
         public async Task<IActionResult> GetUserStreaks()
         {
-           
             var email = User.FindFirst(TokenClaimsConstant.Email).Value;
             var user = await _context.Users
                 .Include(u => u.UserStreaks)
@@ -283,7 +243,6 @@ namespace StreakyAPi.Controllers
         [HttpGet("getUserStreaksWithinDays/{days}")]
         public async Task<IActionResult> GetUserStreaksWithinDays(int days)
         {
-
             var email = User.FindFirst(TokenClaimsConstant.Email).Value;
             var user = await _context.Users
                 .Include(u => u.UserStreaks)

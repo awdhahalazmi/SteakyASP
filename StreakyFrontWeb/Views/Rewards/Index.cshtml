@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StreakyAPi.Model.Responses.RewardResponse>
+﻿@model IEnumerable<StreakyFrontWeb.Models.Offer>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,49 +13,6 @@
             margin: 0;
             padding: 0;
         }
-
-        .reward-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-            .reward-card img {
-                height: 50px;
-                width: 50px;
-                margin-right: 20px;
-                object-fit: cover;
-                border-radius: 50%;
-            }
-
-        .reward-details {
-            flex-grow: 1;
-        }
-
-        .reward-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-primary, .btn-secondary {
-            background-color: #6a1b9a;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-            .btn-primary:hover, .btn-secondary:hover {
-                background-color: #4a148c;
-            }
 
         .sidebar {
             width: 250px;
@@ -148,28 +105,70 @@
                         height: 20px;
                     }
 
+               
+
         .content {
             margin-left: 270px;
             padding-top: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            padding: 20px;
         }
 
-            .content .container {
-                width: 100%;
-                max-width: 900px;
+        .reward-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .reward-card img {
+                height: 50px;
+                margin-right: 20px;
+            }
+
+        .reward-details {
+            flex-grow: 1;
+        }
+
+        .reward-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary, .btn-secondary {
+            background-color: #6a1b9a;
+            border: none;
+        }
+
+            .btn-primary:hover, .btn-secondary:hover {
+                background-color: #4a148c;
+            }
+
+        .btn-custom {
+            background-color: #4A148C;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-custom:hover {
+                background-color: #380a62;
             }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo">
+        <img src="~/images/Logo.png" alt="Logo">
+        <a href="#">Dashboard</a>
         <a href="/StreakList/StreakList">Streak List</a>
         <a href="/Business/List">Business</a>
-        <a href="/SecretDeal/List">Secret Deal</a>
-        <a href="/MyReward/Index" class="active">Rewards</a>
+        <a href="/Rewards/Index" class="active">Rewards</a>
         <a href="/Account/Profile">Account</a>
         <a href="#">Logout</a>
     </div>
@@ -183,35 +182,27 @@
             <span class="dropdown-icon">&#x25BC;</span>
         </div>
     </div>
-
     <div class="content">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">Rewards List</h1>
-                <a href="@Url.Action("AddReward", "MyReward")" class="btn btn-primary">Add Reward</a>
-            </div>
-            @foreach (var reward in Model)
-            {
-                <div class="reward-card">
-                    <div class="d-flex align-items-center">
-                        <img src="@reward.BusinessImage" alt="@reward.BusinessName">
-                        <div class="reward-details">
-                            <h2 class="h5 mb-1">@reward.StreakTitle</h2>
-                            <p class="mb-0">@reward.Description</p>
-                            <p class="mb-0 text-muted">@reward.PointsClaimed Points Claimed</p>
-                            <p class="mb-0 text-muted">Business: @reward.BusinessName</p>
-                        </div>
-                    </div>
-                    <div class="reward-actions">
-                        <a href="@Url.Action("EditReward", "MyReward", new { id = reward.Id })" class="btn btn-primary">Edit</a>
-                        
-                    </div>
-                </div>
-            }
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Rewards List</h1>
+            <a href="@Url.Action("AddOffer", "Rewards")" class="btn-custom">Add Reward</a>
         </div>
+        @foreach (var offer in Model)
+        {
+            <div class="reward-card">
+                <div class="reward-details">
+                    <h2 class="h5 mb-1">@offer.Business</h2>
+                    <p class="mb-0">@offer.Offers</p>
+                    <p class="mb-0 text-muted">@offer.OfferDate</p>
+                </div>
+                <div class="reward-actions">
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@offer.Id" />
+                        <button type="submit" class="btn btn-secondary">Delete</button>
+                    </form>
+                </div>
+            </div>
+        }
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

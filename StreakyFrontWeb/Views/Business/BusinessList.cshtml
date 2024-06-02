@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StreakyAPi.Model.Responses.BusinessResponse>
+﻿@model IEnumerable<StreakyAPi.Model.Business>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +62,6 @@
             left: 0;
             background: #f0f2f5;
             padding-top: 60px;
-            overflow-y: auto;
         }
 
             .sidebar img {
@@ -98,7 +97,6 @@
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
         }
 
             .topbar .search-bar {
@@ -147,6 +145,8 @@
                         height: 20px;
                     }
 
+ 
+
         .content {
             margin-left: 270px;
             padding-top: 80px;
@@ -170,7 +170,7 @@
         <a href="/secretDeal/list">Secret Deal</a>
         <a href="/Rewards/index">Rewards</a>
         <a href="/Account/profile">Account</a>
-        <a href="@Url.Action("Logout", "Account")">Logout</a>
+        <a href="#">Logout</a>
     </div>
     <div class="topbar">
         <div class="search-bar">
@@ -196,7 +196,7 @@
                         <img src="@business.Image" alt="@business.Name">
                         <div class="business-details">
                             <h2 class="h5 mb-1">@business.Name</h2>
-                            <p class="mb-0">@business.CategoryName</p>
+                            <p class="mb-0">@business.CategoryId</p>
                             <p class="mb-0 text-muted">@business.Question</p>
                         </div>
                     </div>

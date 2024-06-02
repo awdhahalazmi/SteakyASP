@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StreakyAPi.Model;
@@ -7,7 +6,6 @@ using StreakyAPi.Model.Auth;
 using StreakyAPi.Model.Reponses;
 using StreakyAPi.Model.Request;
 using StreakyAPi.Model.Token;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace StreakyAPi.Controllers
 {
@@ -90,15 +88,14 @@ namespace StreakyAPi.Controllers
             {
                 return NotFound("User not found");
             }
-            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
             var userProfile = new ProfileResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 GenderId = user.GenderId,
-                ImagePath = $"{baseUrl}/{user.ImagePath}"
-
+                ImagePath = user.ImagePath
             };
 
             return Ok(userProfile);
@@ -118,33 +115,30 @@ namespace StreakyAPi.Controllers
 
 
             user.Name = request.Name;
-            if (request.GenderId.HasValue)
+            user.GenderId = request.GenderId;
+
+            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(),
+                                        "uploads", user.Id.ToString()));
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(),
+                                        "uploads", user.Id.ToString(),
+                                        request.Image.FileName);
+
+            using (var stream = System.IO.File.Create(filePath))
             {
-                user.GenderId = request.GenderId.Value;
+                await request.Image.CopyToAsync(stream);
             }
-            if (request.Image != null)
-            {
 
 
-                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads", user.Id.ToString());
-                Directory.CreateDirectory(uploadsDir);
 
-                var filePath = Path.Combine(uploadsDir, request.Image.FileName);
-
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await request.Image.CopyToAsync(stream);
-                }
-
-                user.ImagePath = $"uploads/{user.Id}/{request.Image.FileName}";
-            }
+            user.ImagePath = $"uploads/{user.Id}/{request.Image.FileName}";
             _context.SaveChanges();
 
             return Ok(new { Message = "Profile updated successfully" });
         }
 
-
-
+    
+   
 
 
         [HttpGet("categories")]
@@ -295,7 +289,8 @@ namespace StreakyAPi.Controllers
 
             return Ok(new { Message = "Friend request accepted successfully" });
         }
-      
+
+
         [HttpGet("friendRequests")]
         public IActionResult GetFriendRequests()
         {
@@ -343,8 +338,6 @@ namespace StreakyAPi.Controllers
             }).ToList();
 
             return Ok(friends);
-
-
         }
     }
 }

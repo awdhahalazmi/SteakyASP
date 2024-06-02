@@ -1,5 +1,4 @@
-﻿@using StreakyAPi.Model.Request
-@model RewardRequest
+﻿@model StreakyFrontWeb.Models.Offer
 
 <!DOCTYPE html>
 <html lang="en">
@@ -130,9 +129,8 @@
             }
 
         .btn-secondary {
-            background-color: white;
-            color: #6a1b9a;
             border: 1px solid #6a1b9a;
+            color: #6a1b9a;
         }
 
             .btn-secondary:hover {
@@ -143,28 +141,15 @@
             display: flex;
             justify-content: space-between;
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .delete-link {
-            color: red;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <img src="~/images/logo.png" alt="Logo">
-        <a href="/StreakList/StreakList">Streak List</a>
+        <a href="/Streaklist/streakList">Streak List</a>
         <a href="/Business/List">Business</a>
-        <a href="/SecretDeal/List">Secret Deal</a>
-        <a href="/MyReward/Index" class="active">Rewards</a>
-        <a href="/Account/Profile">Account</a>
+        <a href="/Rewards/Index" class="active">Rewards</a>
+        <a href="/Account/profile">Account</a>
         <a href="#">Logout</a>
     </div>
     <div class="topbar">
@@ -179,39 +164,30 @@
     </div>
     <div class="content">
         <h1>Add Reward</h1>
-        <form method="post" enctype="multipart/form-data" asp-action="AddReward" asp-controller="MyReward">
-            @Html.AntiForgeryToken()
+        <form method="post" action="@Url.Action("AddOffer", "Rewards")">
             <div class="form-group">
-                <label for="StreakId">Streak</label>
-                <select class="form-control" id="StreakId" name="StreakId" required>
-                    <option value="">Select Streak</option>
-                    @foreach (var streak in ViewBag.Streaks)
-                    {
-                        <option value="@streak.Value">@streak.Text</option>
-                    }
-                </select>
+                <label for="OfferDate">Offer Date</label>
+                <input type="date" class="form-control" id="OfferDate" name="OfferDate" required />
             </div>
             <div class="form-group">
-                <label for="BusinessId">Business</label>
-                <select class="form-control" id="BusinessId" name="BusinessId" required>
+                <label for="Offers">Offers</label>
+                <input type="text" class="form-control" id="Offers" name="Offers" required />
+            </div>
+            <div class="form-group">
+                <label for="Points">Points</label>
+                <input type="number" class="form-control" id="Points" name="Points" required />
+            </div>
+            <div class="form-group">
+                <label for="Business">Business</label>
+                <select class="form-control" id="Business" name="Business" required>
                     <option value="">Select Business</option>
-                    @foreach (var business in ViewBag.Businesses)
-                    {
-                        <option value="@business.Value">@business.Text</option>
-                    }
+                    <option value="Pick">Pick</option>
+                    <option value="Ananas">Ananas</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="Description">Description</label>
-                <input type="text" class="form-control" id="Description" name="Description" required />
-            </div>
-            <div class="form-group">
-                <label for="PointsClaimed">Points Claimed</label>
-                <input type="number" class="form-control" id="PointsClaimed" name="PointsClaimed" required />
-            </div>
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "MyReward")'">Cancel</button>
+            <div class="form-group button-group">
+                <a href="@Url.Action("Index", "Rewards")" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>

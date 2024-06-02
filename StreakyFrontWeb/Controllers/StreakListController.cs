@@ -1,124 +1,166 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StreakyFrontWeb.API;
-using StreakyAPi.Model.Request;
-using System.Threading.Tasks;
-using System.Net.Http;
+using StreakyFrontWeb.Models;
+using System.Collections.Generic;
 using System.Linq;
-using StreakyAPi.Model.Responses;
 
 namespace StreakyFrontWeb.Controllers
 {
     public class StreakListController : Controller
     {
-        private readonly StreakyAPI _streakyAPI;
-
-        public StreakListController(StreakyAPI streakyAPI)
+        private static List<Streaks> streaks = new List<Streaks>
         {
-            _streakyAPI = streakyAPI;
-        }
+            new Streaks { Id = 1, Title = "First Streak", Description = "Description for first streak", BusinessId = 1, StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(30) },
+            new Streaks { Id = 2, Title = "Second Streak", Description = "Description for second streak", BusinessId = 2, StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(60) }
+        };
 
-        public async Task<IActionResult> StreakList()
+        //private static List<Business> businesses = new List<Business>
+        //{
+        //    new Business { Id = 1, Name = "Business 1" },
+        //    new Business { Id = 2, Name = "Business 2" }
+        //};
+
+        public IActionResult StreakList()
         {
-            var streaks = await _streakyAPI.GetAllStreaks();
             return View(streaks);
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddStreak()
+        public IActionResult AddStreak()
         {
-            ViewBag.Businesses = await _streakyAPI.GetAllBusinesses();
+           // ViewBag.Businesses = businesses;
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddStreak(StreakRequest streakRequest)
+        public IActionResult AddStreak(Streaks streak)
         {
             if (ModelState.IsValid)
             {
-                bool response = await _streakyAPI.AddStreak(streakRequest);
-                if (response)
-                {
-                    return RedirectToAction(nameof(StreakList));
-                }
-                TempData["Error"] = "Failed to add streak. Please try again.";
+                streak.Id = streaks.Max(s => s.Id) + 1;
+                streaks.Add(streak);
+                return RedirectToAction("StreakList");
             }
-
-            ViewBag.Businesses = await _streakyAPI.GetAllBusinesses(); // Reload businesses on failure
-            return View(streakRequest);
+           // ViewBag.Businesses = businesses;
+            return View(streak);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditStreak(int id)
+        public IActionResult EditStreak(int id)
         {
-            ViewBag.Title = "Edit Streak";
-            ViewBag.Action = "EditStreak";
-
-            var streak = await _streakyAPI.GetStreakById(id);
+            var streak = streaks.FirstOrDefault(s => s.Id == id);
             if (streak == null)
             {
                 return NotFound();
             }
-
-            var businesses = await _streakyAPI.GetAllBusinesses(); // Assuming streaks are related to businesses
-            ViewBag.Businesses = businesses ?? new List<BusinessResponse>();
-
-            var model = new StreakRequest
-            {
-                Id = streak.Id,
-                Title = streak.Title,
-                Description = streak.Description,
-                StartDate = streak.StartDate,
-                EndDate = streak.EndDate,
-                BusinessIds = streak.Businesses.Select(b => b.Id).ToList()
-            };
-
-            return View(model);
+          //  ViewBag.Businesses = businesses;
+            return View(streak);
         }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditStreak(int id, StreakRequest streakRequest)
+        public IActionResult EditStreak(Streaks streak)
         {
             if (ModelState.IsValid)
             {
-                bool response = await _streakyAPI.EditStreak(id, streakRequest);
-                if (response)
+                var existingStreak = streaks.FirstOrDefault(s => s.Id == streak.Id);
+                if (existingStreak == null)
                 {
-                    return RedirectToAction(nameof(StreakList));
+                    return NotFound();
                 }
-                TempData["Error"] = "Failed to edit streak. Please try again.";
-            }
-            else
-            {
-                // Log model state errors
-                foreach (var state in ModelState)
-                {
-                    var key = state.Key;
-                    var errors = state.Value.Errors;
-                    foreach (var error in errors)
-                    {
-                        Console.WriteLine($"ModelState Error - Key: {key}, Error: {error.ErrorMessage}");
-                    }
-                }
-            }
+                existingStreak.Title = streak.Title;
+                existingStreak.Description = streak.Description;
+                existingStreak.BusinessId = streak.BusinessId;
+                existingStreak.StartDate = streak.StartDate;
+                existingStreak.EndDate = streak.EndDate;
 
-            // In case of an error, reload necessary data for the view
-            var businesses = await _streakyAPI.GetAllBusinesses();
-            ViewBag.Businesses = businesses ?? new List<BusinessResponse>();
-            return View(streakRequest);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteStreak(int id)
-        {
-            bool response = await _streakyAPI.DeleteStreak(id);
-            if (response)
-            {
-                return RedirectToAction(nameof(StreakList));
+                return RedirectToAction("StreakList");
             }
-            TempData["Error"] = "Failed to delete streak. Please try again.";
-            return RedirectToAction(nameof(EditStreak), new { id });
+          //  ViewBag.Businesses = businesses;
+            return View(streak);
         }
     }
 }
+
+
+
+
+//using Microsoft.AspNetCore.Mvc;
+
+//using StreakyFrontWeb.Models;
+
+
+//namespace StreakyFrontWeb.Controllers
+//{
+
+
+//        public class StreakListController : Controller
+//        {
+//            private static List<Streak> _streaks = new List<Streak>
+//        {
+//            new Streak { Id = 1, Name = "Pick Yo", Description = "This Week's Streak", StreakDate = DateTime.Now },
+//            new Streak { Id = 2, Name = "Ananas", Description = "This Week's Streak", StreakDate = DateTime.Now },
+//            new Streak { Id = 3, Name = "Pick Yo", Description = "This Week's Streak", StreakDate = DateTime.Now }
+//        };
+
+//            public IActionResult Index()
+//            {
+//                return View(_streaks);
+//            }
+
+//            public IActionResult Edit(int id)
+//            {
+//                var streak = _streaks.FirstOrDefault(s => s.Id == id);
+//                if (streak == null)
+//                {
+//                    return NotFound();
+//                }
+//                return View(streak);
+//            }
+
+//            [HttpPost]
+//            public IActionResult Edit(Streak streak)
+//            {
+//                var existingStreak = _streaks.FirstOrDefault(s => s.Id == streak.Id);
+//                if (existingStreak == null)
+//                {
+//                    return NotFound();
+//                }
+
+//                existingStreak.Name = streak.Name;
+//                existingStreak.Description = streak.Description;
+//                existingStreak.StreakDate = streak.StreakDate;
+
+//                return RedirectToAction(nameof(Index));
+//            }
+
+//            public IActionResult Add()
+//            {
+//                return View();
+//            }
+
+//            [HttpPost]
+//            public IActionResult Add(Streak streak)
+//            {
+//                if (ModelState.IsValid)
+//                {
+//                    streak.Id = _streaks.Max(s => s.Id) + 1;
+//                    _streaks.Add(streak);
+//                    return RedirectToAction(nameof(Add));
+//                }
+//                return View(streak);
+//            }
+
+//            [HttpPost]
+//            public IActionResult Delete(int id)
+//            {
+//                var streak = _streaks.FirstOrDefault(s => s.Id == id);
+//                if (streak != null)
+//                {
+//                    _streaks.Remove(streak);
+//                }
+//                return RedirectToAction(nameof(Index));
+//            }
+//        }
+//    }
+
+
+
