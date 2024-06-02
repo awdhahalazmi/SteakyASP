@@ -9,12 +9,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
+            color: white;
+        }
+
+        .form-container {
+            background: #240046;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 80px 0;
+            margin-left: auto; /* Aligns the form to the right */
+            margin-right: 30px; /* Adjust as needed for spacing */
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .btn-primary {
+            background-color: #4A148C;
+            border: none;
+            border-radius: 8px;
+        }
+
+            .btn-primary:hover {
+                background-color: #380a62;
+            }
+
+        .btn-secondary {
+            background-color: white;
+            color: #4A148C;
+            border: 1px solid #4A148C;
+            border-radius: 8px;
+        }
+
+            .btn-secondary:hover {
+                background-color: #f0f2f5;
+            }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
         }
 
         .sidebar {
@@ -23,29 +72,32 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: #f0f2f5;
-            padding-top: 60px;
+            background: #240046;
+            padding-top: 20px;
+            overflow-y: auto;
         }
 
             .sidebar img {
                 display: block;
-                margin: 20px auto;
+                margin: 20px auto 20px auto;
                 width: 150px;
             }
 
             .sidebar a {
                 display: block;
                 padding: 10px 20px;
-                color: #4A148C;
+                color: #ffccff;
                 text-decoration: none;
             }
 
                 .sidebar a:hover {
-                    background: #e0dce3;
+                    background: #4A148C;
+                    color: white;
                 }
 
             .sidebar .active {
-                background: #e0dce3;
+                background: #4A148C;
+                color: white;
             }
 
         .topbar {
@@ -54,12 +106,13 @@
             position: fixed;
             top: 0;
             left: 250px;
-            background: white;
+            background: #240046;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
         }
 
             .topbar .search-bar {
@@ -72,7 +125,9 @@
                     width: 80%;
                     padding: 5px 10px;
                     border: 1px solid #ccc;
-                    border-radius: 4px;
+                    border-radius: 8px;
+                    background-color: #f8f9fa;
+                    color: #4A148C;
                 }
 
             .topbar .profile-info {
@@ -90,7 +145,7 @@
 
                 .topbar .profile-info span {
                     font-size: 16px;
-                    color: #4A148C;
+                    color: #ccc;
                     margin-right: 5px;
                 }
 
@@ -107,55 +162,17 @@
                         width: 20px;
                         height: 20px;
                     }
-
-        .content {
-            margin-left: 270px;
-            padding-top: 80px;
-            padding: 20px;
-        }
-
-        .form-group label {
-            font-weight: bold;
-        }
-
-        .form-control {
-            margin-bottom: 10px;
-        }
-
-        .btn-primary {
-            background-color: #6a1b9a;
-            border: none;
-        }
-
-            .btn-primary:hover {
-                background-color: #4a148c;
-            }
-
-        .btn-secondary {
-            background-color: white;
-            color: #6a1b9a;
-            border: 1px solid #6a1b9a;
-        }
-
-            .btn-secondary:hover {
-                background-color: #f0f2f5;
-            }
-
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo">
+        <img src="~/images/logo3.png" alt="Logo">
         <a href="StreakList/StreakList">Streak List</a>
         <a href="/Business/BusinessList" class="active">Business</a>
         <a href="/secretDeal/list">Secret Deal</a>
         <a href="/Rewards/index">Rewards</a>
         <a href="/Account/profile">Account</a>
-        <a href="/Account/Login">Logout</a>
+        <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
     <div class="topbar">
         <div class="search-bar">
@@ -164,78 +181,77 @@
         <div class="profile-info">
             <div class="profile-pic"></div>
             <span>Admin</span>
-            <span class="dropdown-icon">&#x25BC;</span>
         </div>
     </div>
     <div class="content">
-        <h1>@ViewBag.Title</h1>
-        <form method="post" enctype="multipart/form-data" action="@Url.Action("AddBusiness", "Business")">
-            <div class="form-group">
-                <label for="Name">Business Name</label>
-                <input type="text" class="form-control" id="Name" name="Name" required />
-            </div>
-            <div class="form-group">
-                <label for="CategoryId">Category</label>
-                <select class="form-control" id="CategoryId" name="CategoryId" required>
-                    <option value="">Select Category</option>
-                    @foreach (var category in ViewBag.Categories)
-                    {
-                        <option value="@category.Id">@category.Name</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="Image">Image</label>
-                <input type="file" class="form-control" id="Image" name="Image" required />
-            </div>
-            <div class="form-group">
-                <label for="Question">Question</label>
-                <input type="text" class="form-control" id="Question" name="Question" required />
-            </div>
-            <div class="form-group">
-                <label for="CorrectAnswer">Correct Answer</label>
-                <input type="text" class="form-control" id="CorrectAnswer" name="CorrectAnswer" required />
-            </div>
-            <div class="form-group">
-                <label for="WrongAnswer1">Wrong Answer 1</label>
-                <input type="text" class="form-control" id="WrongAnswer1" name="WrongAnswer1" required />
-            </div>
-            <div class="form-group">
-                <label for="WrongAnswer2">Wrong Answer 2</label>
-                <input type="text" class="form-control" id="WrongAnswer2" name="WrongAnswer2" required />
-            </div>
-            <div class="form-group">
-                <label for="Question2">Question 2</label>
-                <input type="text" class="form-control" id="Question2" name="Question2" required />
-            </div>
-            <div class="form-group">
-                <label for="CorrectAnswerQ2">Correct Answer for Question 2</label>
-                <input type="text" class="form-control" id="CorrectAnswerQ2" name="CorrectAnswerQ2" required />
-            </div>
-            <div class="form-group">
-                <label for="WrongAnswerQ2_1">Wrong Answer 1 for Question 2</label>
-                <input type="text" class="form-control" id="WrongAnswerQ2_1" name="WrongAnswerQ2_1" required />
-            </div>
-            <div class="form-group">
-                <label for="WrongAnswerQ2_2">Wrong Answer 2 for Question 2</label>
-                <input type="text" class="form-control" id="WrongAnswerQ2_2" name="WrongAnswerQ2_2" required />
-            </div>
-            <div class="form-group">
-                <label for="LocationIds">Location</label>
-                <select class="form-control" id="LocationIds" name="LocationIds" multiple required>
-                    @foreach (var location in ViewBag.Locations)
-                    {
-                        <option value="@location.Id">@location.Name</option>
-                    }
-                </select>
-            </div>
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("BusinessList", "Business")'">Cancel</button>
-            </div>
-        </form>
-
-
+        <div class="form-container">
+            <h1>@ViewBag.Title</h1>
+            <form method="post" enctype="multipart/form-data" action="@Url.Action("AddBusiness", "Business")">
+                <div class="form-group">
+                    <label for="Name">Business Name</label>
+                    <input type="text" class="form-control" id="Name" name="Name" required />
+                </div>
+                <div class="form-group">
+                    <label for="CategoryId">Category</label>
+                    <select class="form-control" id="CategoryId" name="CategoryId" required>
+                        <option value="">Select Category</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Image">Image</label>
+                    <input type="file" class="form-control" id="Image" name="Image" required />
+                </div>
+                <div class="form-group">
+                    <label for="Question">Question</label>
+                    <input type="text" class="form-control" id="Question" name="Question" required />
+                </div>
+                <div class="form-group">
+                    <label for="CorrectAnswer">Correct Answer</label>
+                    <input type="text" class="form-control" id="CorrectAnswer" name="CorrectAnswer" required />
+                </div>
+                <div class="form-group">
+                    <label for="WrongAnswer1">Wrong Answer 1</label>
+                    <input type="text" class="form-control" id="WrongAnswer1" name="WrongAnswer1" required />
+                </div>
+                <div class="form-group">
+                    <label for="WrongAnswer2">Wrong Answer 2</label>
+                    <input type="text" class="form-control" id="WrongAnswer2" name="WrongAnswer2" required />
+                </div>
+                <div class="form-group">
+                    <label for="Question2">Question 2</label>
+                    <input type="text" class="form-control" id="Question2" name="Question2" required />
+                </div>
+                <div class="form-group">
+                    <label for="CorrectAnswerQ2">Correct Answer for Question 2</label>
+                    <input type="text" class="form-control" id="CorrectAnswerQ2" name="CorrectAnswerQ2" required />
+                </div>
+                <div class="form-group">
+                    <label for="WrongAnswerQ2_1">Wrong Answer 1 for Question 2</label>
+                    <input type="text" class="form-control" id="WrongAnswerQ2_1" name="WrongAnswerQ2_1" required />
+                </div>
+                <div class="form-group">
+                    <label for="WrongAnswerQ2_2">Wrong Answer 2 for Question 2</label>
+                    <input type="text" class="form-control" id="WrongAnswerQ2_2" name="WrongAnswerQ2_2" required />
+                </div>
+                <div class="form-group">
+                    <label for="LocationIds">Location</label>
+                    <select class="form-control" id="LocationIds" name="LocationIds" multiple required>
+                        @foreach (var location in ViewBag.Locations)
+                        {
+                            <option value="@location.Id">@location.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("BusinessList", "Business")'">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
