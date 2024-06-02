@@ -4,20 +4,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Profile Page";
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            background: #f0f2f5;
-            color: #4A148C;
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
+            color: white;
         }
 
         .sidebar {
@@ -26,7 +26,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: #f0f2f5;
+            background: #240046;
             padding-top: 60px;
         }
 
@@ -39,17 +39,13 @@
             .sidebar a {
                 display: block;
                 padding: 10px 20px;
-                color: #4A148C;
+                color: white;
                 text-decoration: none;
             }
 
-                .sidebar a:hover {
-                    background: #e0dce3;
+                .sidebar a:hover, .sidebar .active {
+                    background: #4a148c;
                 }
-
-            .sidebar .active {
-                background: #e0dce3;
-            }
 
         .topbar {
             width: calc(100% - 250px);
@@ -57,7 +53,7 @@
             position: fixed;
             top: 0;
             left: 250px;
-            background: white;
+            background: #240046;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -72,7 +68,7 @@
             }
 
                 .topbar .search-bar input {
-                    width: 80%;
+                    width: 90%;
                     padding: 5px 10px;
                     border: 1px solid #ccc;
                     border-radius: 4px;
@@ -84,8 +80,8 @@
             }
 
                 .topbar .profile-info .profile-pic {
-                    width: 40px;
-                    height: 40px;
+                    width: 50px;
+                    height: 50px;
                     border-radius: 50%;
                     background-color: #e0dce3;
                     margin-right: 10px;
@@ -96,41 +92,23 @@
 
                 .topbar .profile-info span {
                     font-size: 16px;
-                    color: #4A148C;
+                    color: white;
                     margin-right: 5px;
                 }
 
-                .topbar .profile-info .dropdown-icon {
-                    font-size: 12px;
-                    color: #6c757d;
-                }
-
-                .topbar .profile-info .notification-icon {
-                    position: relative;
-                }
-
-                    .topbar .profile-info .notification-icon img {
-                        width: 20px;
-                        height: 20px;
-                    }
-
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
+            width: calc(100% - 250px);
+            margin-left: 250px;
+            padding: 20px;
+            padding-top: 80px;
         }
 
         .profile {
             width: 100%;
-            max-width: 1400px;
             padding: 40px;
-            background: white;
-            border-radius: 8px;
+            background: #240046;
+            border-radius: 16px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         .profile-header {
@@ -146,9 +124,9 @@
         }
 
         .profile-pic {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
             background-color: #e0dce3;
             margin-right: 20px;
             background-image: url('@Model.ImagePath');
@@ -163,18 +141,19 @@
 
             .profile-details h2 {
                 margin: 0;
-                font-size: 28px;
+                font-size: 32px;
+                font-family: 'Poppins', sans-serif;
             }
 
             .profile-details span {
                 font-size: 18px;
-                color: #6c757d;
+                color: #ffccff;
             }
 
         .edit-link {
             align-self: flex-start;
-            color: #4A148C;
-            text-decoration: none;
+            color: white;
+            text-decoration: underline;
             cursor: pointer;
         }
 
@@ -195,28 +174,31 @@
 
                 .profile-body .info-group label {
                     font-size: 18px;
-                    color: #4A148C;
+                    color: white;
                 }
 
                 .profile-body .info-group input {
                     padding: 10px;
                     font-size: 16px;
                     margin-top: 5px;
+                    width: 100%;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
                 }
 
         .btn-primary {
-            background-color: #6a1b9a;
+            background-color: #4A148C;
             border: none;
         }
 
             .btn-primary:hover {
-                background-color: #4a148c;
+                background-color: #380a62;
             }
 
         .btn-secondary {
             background-color: white;
-            color: #6a1b9a;
-            border: 1px solid #6a1b9a;
+            color: #4A148C;
+            border: 1px solid #4A148C;
         }
 
             .btn-secondary:hover {
@@ -226,13 +208,6 @@
         .button-group {
             display: flex;
             justify-content: space-between;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -264,7 +239,6 @@
                     <div class="profile-pic"></div>
                     <div class="profile-details">
                         <h2>@Model.Name</h2>
-                        <span>@Model.Email</span>
                     </div>
                 </div>
                 <a class="edit-link" onclick="toggleEditForm()">Edit</a>
@@ -279,6 +253,10 @@
                         <label for="Image">Profile Picture</label>
                         <input type="file" id="Image" name="Image" class="form-control" />
                     </div>
+                    <div class="info-group">
+                        <label for="Email">Email</label>
+                        <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" required />
+                    </div>
                     <div class="button-group">
                         <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary">Cancel</a>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -286,11 +264,11 @@
                 </form>
                 <div id="profileInfo">
                     <div class="info-group">
-                        <label>Name</label>
+                        <label>Name:</label>
                         <span>@Model.Name</span>
                     </div>
                     <div class="info-group">
-                        <label>Email</label>
+                        <label>Email:</label>
                         <span>@Model.Email</span>
                     </div>
                 </div>
@@ -313,3 +291,5 @@
     </script>
 </body>
 </html>
+
+
