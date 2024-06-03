@@ -6,7 +6,8 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public int GenderId { get; set; }
-
         public string ImagePath { get; set; }
+        public double Points { get; set; } 
+
     }
 }

@@ -92,7 +92,7 @@ namespace StreakyAPi.Controllers
             return Ok(new { Message = "Streak created", Streak = response });
         }
 
-       
+
         [HttpGet("getAllStreaks")]
         public async Task<IActionResult> GetAllStreaks()
         {
@@ -274,7 +274,7 @@ namespace StreakyAPi.Controllers
             {
                 return NotFound("User not found");
             }
-
+            //TODO check if remove the user. 
             user.UserStreaksCount = user.UserStreaks.Count; // Update the UserStreaksCount
 
             return Ok(new { TotalStreaks = user.UserStreaksCount });

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -80,7 +81,6 @@ namespace StreakyAPi.Controllers
             }
             return BadRequest("Username and/or Password is wrong");
         }
-
         [HttpGet("profile")]
         public IActionResult Profile()
         {
@@ -97,7 +97,9 @@ namespace StreakyAPi.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 GenderId = user.GenderId,
-                ImagePath = $"{baseUrl}/{user.ImagePath}"
+                ImagePath = $"{baseUrl}/{user.ImagePath}",
+                Points = user.Points
+
 
             };
 
@@ -295,7 +297,7 @@ namespace StreakyAPi.Controllers
 
             return Ok(new { Message = "Friend request accepted successfully" });
         }
-      
+
         [HttpGet("friendRequests")]
         public IActionResult GetFriendRequests()
         {
@@ -322,6 +324,7 @@ namespace StreakyAPi.Controllers
 
             return Ok(friendRequestResponses);
         }
+
         [HttpGet("friends")]
         public IActionResult GetFriends()
         {
@@ -339,12 +342,28 @@ namespace StreakyAPi.Controllers
             {
                 f.Id,
                 f.Name,
-                f.Email
+                f.Email,
+                f.UserStreaks
             }).ToList();
 
             return Ok(friends);
 
 
+        }
+        [HttpPost("updatePoints")]
+        public IActionResult UpdatePoints(UpdatePointsRequest request)
+        {
+            var email = User.FindFirst(TokenClaimsConstant.Email).Value;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.Points += request.Points;
+            _context.SaveChanges();
+
+            return Ok(new { Message = "Points updated successfully" });
         }
     }
 }

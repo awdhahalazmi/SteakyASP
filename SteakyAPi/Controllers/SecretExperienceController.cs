@@ -30,6 +30,7 @@ namespace StreakyAPi.Controllers
 
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetAllSecretExperiences()
         {
@@ -58,7 +59,6 @@ namespace StreakyAPi.Controllers
 
             return Ok(secretExperiences);
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSecretExperienceById(int id)
         {
