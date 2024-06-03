@@ -165,14 +165,15 @@
 </head>
 <body>
     <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo">
-        <a href="/StreakList/StreakList">Streak List</a>
-        <a href="/Business/List">Business</a>
-        <a href="/SecretDeal/List">Secret Deal</a>
-        <a href="/MyReward/Index" class="active">Rewards</a>
-        <a href="/Account/Profile">Account</a>
-        <a href="#">Logout</a>
+        <img src="~/images/logo3.png" alt="Logo">
+        <a href="@Url.Action("StreakList", "StreakList")" class="active">Streak List</a>
+        <a href="@Url.Action("BusinessList", "Business")">Business</a>
+        <a href="@Url.Action("List", "SecretDeal")">Secret Deal</a>
+        <a href="@Url.Action("Index", "MyReward")" class="active">Rewards</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
+        <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
+
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />

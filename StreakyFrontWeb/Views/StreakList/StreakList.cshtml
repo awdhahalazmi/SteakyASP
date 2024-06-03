@@ -91,27 +91,12 @@
             left: 250px;
             background: #240046;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end; /* Aligned to the right */
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 1000;
         }
-
-            .topbar .search-bar {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-            }
-
-                .topbar .search-bar input {
-                    width: 80%;
-                    padding: 5px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    background-color: #f8f9fa;
-                    color: #4A148C;
-                }
 
             .topbar .profile-info {
                 display: flex;
@@ -163,17 +148,16 @@
 </head>
 <body>
     <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo">
+        <img src="~/images/logo3.png" alt="Logo">
         <a href="@Url.Action("StreakList", "StreakList")" class="active">Streak List</a>
         <a href="@Url.Action("BusinessList", "Business")">Business</a>
+        <a href="@Url.Action("List", "SecretDeal")">Secret Deal</a>
+        <a href="@Url.Action("Index", "MyReward")">Rewards</a>
         <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
 
     <div class="topbar">
-        <div class="search-bar">
-            <input type="text" placeholder="Search" />
-        </div>
         <div class="profile-info">
             <div class="profile-pic"></div>
             <span>Admin</span>

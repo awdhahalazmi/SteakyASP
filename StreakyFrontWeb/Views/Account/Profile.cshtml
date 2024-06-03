@@ -1,5 +1,4 @@
 @model StreakyAPi.Model.Reponses.ProfileResponse
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Profile Page";
@@ -55,24 +54,11 @@
             left: 250px;
             background: #240046;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-            .topbar .search-bar {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-            }
-
-                .topbar .search-bar input {
-                    width: 90%;
-                    padding: 5px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                }
 
             .topbar .profile-info {
                 display: flex;
@@ -212,19 +198,18 @@
     </style>
 </head>
 <body>
+
     <div class="sidebar">
-        <img src="~/images/Logo.png" alt="Logo">
+        <img src="~/images/logo3.png" alt="Logo">
         <a href="@Url.Action("StreakList", "StreakList")">Streak List</a>
         <a href="@Url.Action("BusinessList", "Business")">Business</a>
-        <a href="@Url.Action("Index", "Rewards")">Rewards</a>
+        <a href="@Url.Action("List", "SecretDeal")">Secret Deal</a>
+        <a href="@Url.Action("Index", "MyReward")">Rewards</a>
         <a href="@Url.Action("Profile", "Account")" class="active">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
 
     <div class="topbar">
-        <div class="search-bar">
-            <input type="text" placeholder="Search" />
-        </div>
         <div class="profile-info">
             <div class="profile-pic"></div>
             <span>@Model.Name</span>
@@ -291,5 +276,4 @@
     </script>
 </body>
 </html>
-
 
