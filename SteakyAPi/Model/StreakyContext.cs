@@ -78,11 +78,11 @@ namespace StreakyAPi.Model
                 .HasForeignKey(us => us.StreakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Business>()
-                .HasOne(b => b.Category)
-                .WithMany(c => c.Businesses)
-                .HasForeignKey(b => b.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Business>()
+            //    .HasOne(b => b.Category)
+            //    .WithMany(c => c.Businesses)
+            //    .HasForeignKey(b => b.CategoryId)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Streaks>()
                 .HasMany(s => s.Businsses)
