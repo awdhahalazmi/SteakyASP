@@ -74,6 +74,7 @@ namespace StreakyAPi.Controllers
             return Ok(new { Message = "Reward added successfully"});
         }
 
+
         [HttpPut("editReward/{rewardId}")]
         public async Task<IActionResult> EditReward(int rewardId, [FromBody] RewardRequest request)
         {
@@ -160,6 +161,7 @@ namespace StreakyAPi.Controllers
 
             return Ok(rewards);
         }
+
         [HttpGet("getReward/{rewardId}")]
         public async Task<IActionResult> GetRewardById(int rewardId)
         {

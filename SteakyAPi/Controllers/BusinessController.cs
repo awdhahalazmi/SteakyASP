@@ -192,7 +192,7 @@ namespace StreakyAPi.Controllers
             {
                 Id = b.Id,
                 Name = b.Name,
-                CategoryId = b.CategoryId,
+               CategoryId = b.CategoryId,
                 Image = $"{baseUrl}/{b.Image}",
                 Question = b.Question,
                 CorrectAnswer = b.CorrectAnswer,
@@ -201,7 +201,9 @@ namespace StreakyAPi.Controllers
                 Question2 = b.Question2, 
                 CorrectAnswerQ2 = b.CorrectAnswerQ2, 
                 WrongAnswerQ2_1 = b.WrongAnswerQ2_1, 
-                WrongAnswerQ2_2 = b.WrongAnswerQ2_2, 
+                WrongAnswerQ2_2 = b.WrongAnswerQ2_2,
+                CategoryName = b.Category.Name,
+
 
                 Locations = b.Locations.Select(l => new LocationResponse
                 {
@@ -212,7 +214,7 @@ namespace StreakyAPi.Controllers
                     Latitude = l.Latitude,
                     Longitude = l.Longitude
                 }).ToList(),
-                CategoryName = b.Category.Name
+              //  CategoryName = b.Category.Name
             }).ToList();
 
             return Ok(response);
@@ -374,7 +376,7 @@ namespace StreakyAPi.Controllers
             {
                 Id = business.Id,
                 Name = business.Name,
-                CategoryId = business.CategoryId,
+               CategoryId = business.CategoryId,
                 Image = $"{baseUrl}/{business.Image}",
                 Question = business.Question,
                 CorrectAnswer = business.CorrectAnswer,
