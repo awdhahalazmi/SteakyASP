@@ -343,7 +343,7 @@ namespace StreakyAPi.Controllers
                 f.Id,
                 f.Name,
                 f.Email,
-                f.UserStreaks
+                f.UserStreaksCount
             }).ToList();
 
             return Ok(friends);
