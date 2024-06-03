@@ -167,11 +167,11 @@
 <body>
     <div class="sidebar">
         <img src="~/images/logo3.png" alt="Logo">
-        <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList" class="active">Business</a>
-        <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index">Rewards</a>
-        <a href="/Account/profile">Account</a>
+        <a href="@Url.Action("StreakList", "StreakList")">Streak List</a>
+        <a href="@Url.Action("BusinessList", "Business")" class="active">Business</a>
+        <a href="@Url.Action("List", "SecretDeal")">Secret Deal</a>
+        <a href="@Url.Action("Index", "MyReward")">Rewards</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
     <div class="topbar">
@@ -203,7 +203,8 @@
                 </div>
                 <div class="form-group">
                     <label for="Image">Image</label>
-                    <input type="file" class="form-control" id="Image" name="Image" required />
+                    <input type="file" class="form-control" id="Image" name="Image" required onchange="previewImage(event)" />
+                    <img id="imagePreview" src="#" alt="Selected Image" style="display: none; margin-top: 10px; max-width: 100px; border-radius: 8px;" />
                 </div>
                 <div class="form-group">
                     <label for="Question">Question</label>
@@ -253,5 +254,17 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('imagePreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </body>
 </html>

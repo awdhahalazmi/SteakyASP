@@ -31,8 +31,10 @@
 
             .business-card img {
                 height: 50px;
+                width: 50px; /* Set a fixed width */
                 margin-right: 20px;
                 border-radius: 8px;
+                object-fit: cover; /* Ensure the image covers the area without distortion */
             }
 
         .business-details {
@@ -68,7 +70,7 @@
             top: 0;
             left: 0;
             background: #240046;
-            padding-top: 20px; 
+            padding-top: 20px;
             overflow-y: auto;
         }
 
@@ -101,29 +103,14 @@
             position: fixed;
             top: 0;
             left: 250px;
-            background: #240046; /* topbar  */
+            background: #240046;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 1000;
         }
-
-            .topbar .search-bar {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-            }
-
-                .topbar .search-bar input {
-                    width: 80%;
-                    padding: 5px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    background-color: #f8f9fa; 
-                    color: #4A148C;
-                }
 
             .topbar .profile-info {
                 display: flex;
@@ -176,20 +163,17 @@
 <body>
     <div class="sidebar">
         <img src="~/images/logo3.png" alt="Logo">
-        <a href="StreakList/StreakList">Streak List</a>
-        <a href="/Business/BusinessList" class="active">Business</a>
-        <a href="/secretDeal/list">Secret Deal</a>
-        <a href="/Rewards/index">Rewards</a>
-        <a href="/Account/profile">Account</a>
+        <a href="@Url.Action("StreakList", "StreakList")">Streak List</a>
+        <a href="@Url.Action("Businesslist", "Business")" class="active">Business</a>
+        <a href="@Url.Action("List", "SecretDeal")">Secret Deal</a>
+        <a href="@Url.Action("Index", "MyReward")">Rewards</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
     <div class="topbar">
-        <div class="search-bar">
-            <input type="text" placeholder="Search" />
-        </div>
         <div class="profile-info">
-            <div class="profile-pic"></div>
             <span>Admin</span>
+            <div class="profile-pic"></div>
         </div>
     </div>
 
@@ -199,21 +183,28 @@
                 <h1 class="h3">Business List</h1>
                 <a href="@Url.Action("AddBusiness", "Business")" class="btn btn-primary">Add Partner</a>
             </div>
-            @foreach (var business in Model)
+            @if (!Model.Any())
             {
-                <div class="business-card">
-                    <div class="d-flex align-items-center">
-                        <img src="@business.Image" alt="@business.Name">
-                        <div class="business-details">
-                            <h2 class="h5 mb-1">@business.Name</h2>
-                            <p class="mb-0">@business.CategoryName</p>
-                            <p class="mb-0 text-muted">@business.Question</p>
+                <p>No businesses available.</p>
+            }
+            else
+            {
+                @foreach (var business in Model)
+                {
+                    <div class="business-card">
+                        <div class="d-flex align-items-center">
+                            <img src="@business.Image" alt="@business.Name">
+                            <div class="business-details">
+                                <h2 class="h5 mb-1">@business.Name</h2>
+                                <p class="mb-0">@business.CategoryName</p>
+                                <p class="mb-0 text-muted">@business.Question</p>
+                            </div>
+                        </div>
+                        <div class="business-actions">
+                            <a href="@Url.Action("EditBusiness", "Business", new { id = business.Id })" class="btn btn-primary">Edit</a>
                         </div>
                     </div>
-                    <div class="business-actions">
-                        <a href="@Url.Action("EditBusiness", "Business", new { id = business.Id })" class="btn btn-primary">Edit</a>
-                    </div>
-                </div>
+                }
             }
         </div>
     </div>
