@@ -6,22 +6,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secret Deals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
+            color: white;
         }
 
         .deal-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
+            background: #240046;
+            border: none;
+            border-radius: 16px;
             margin-bottom: 20px;
             padding: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
             .deal-card img {
@@ -42,19 +47,20 @@
         }
 
         .btn-primary, .btn-secondary {
-            background-color: #6a1b9a;
+            background-color: #4A148C;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 10px 20px;
             color: white;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background-color 0.3s ease;
         }
 
             .btn-primary:hover, .btn-secondary:hover {
-                background-color: #4a148c;
+                background-color: #380a62;
             }
 
         .sidebar {
@@ -63,29 +69,32 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: #f0f2f5;
-            padding-top: 60px;
+            background: #240046;
+            padding-top: 20px;
+            overflow-y: auto;
         }
 
             .sidebar img {
                 display: block;
-                margin: 20px auto;
+                margin: 20px auto 20px auto;
                 width: 150px;
             }
 
             .sidebar a {
                 display: block;
                 padding: 10px 20px;
-                color: #4A148C;
+                color: #ffccff;
                 text-decoration: none;
             }
 
                 .sidebar a:hover {
-                    background: #e0dce3;
+                    background: #4A148C;
+                    color: white;
                 }
 
             .sidebar .active {
-                background: #e0dce3;
+                background: #4A148C;
+                color: white;
             }
 
         .topbar {
@@ -94,30 +103,19 @@
             position: fixed;
             top: 0;
             left: 250px;
-            background: white;
+            background: #240046;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
         }
-
-            .topbar .search-bar {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-            }
-
-                .topbar .search-bar input {
-                    width: 80%;
-                    padding: 5px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                }
 
             .topbar .profile-info {
                 display: flex;
                 align-items: center;
+                margin-left: auto;
             }
 
                 .topbar .profile-info .profile-pic {
@@ -125,22 +123,24 @@
                     height: 40px;
                     border-radius: 50%;
                     background-color: #e0dce3;
-                    margin-right: 10px;
+                    margin-left: 10px;
                 }
 
                 .topbar .profile-info span {
                     font-size: 16px;
-                    color: #4A148C;
-                    margin-right: 5px;
+                    color: #ccc;
+                    margin-left: 5px;
                 }
 
                 .topbar .profile-info .dropdown-icon {
                     font-size: 12px;
                     color: #6c757d;
+                    margin-left: 5px;
                 }
 
                 .topbar .profile-info .notification-icon {
                     position: relative;
+                    margin-left: 10px;
                 }
 
                     .topbar .profile-info .notification-icon img {
@@ -165,26 +165,19 @@
 </head>
 <body>
     <div class="sidebar">
-        <img src="~/images/logo.png" alt="Logo">
-        <a href="/StreakList">Streak List</a>
-        <a href="/Business">Business</a>
-        <a href="/SecretDeal" class="active">Secret Deals</a>
-        <a href="/Rewards">Rewards</a>
-        <a href="/Account/Profile">Account</a>
-        <a href="/Account/Login">Logout</a>
+        <img src="~/images/logo3.png" alt="Logo">
+        <a href="@Url.Action("StreakList", "StreakList")">Streak List</a>
+        <a href="@Url.Action("Businesslist", "Business")">Business</a>
+        <a href="@Url.Action("List", "SecretDeal")" class="active">Secret Deal</a>
+        <a href="@Url.Action("Index", "MyReward")">Rewards</a>
+        <a href="@Url.Action("Profile", "Account")">Account</a>
+        <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
 
     <div class="topbar">
-        <div class="search-bar">
-            <input type="text" placeholder="Search" />
-        </div>
         <div class="profile-info">
-            <div class="profile-pic"></div>
             <span>Admin</span>
-            <span class="dropdown-icon">&#x25BC;</span>
-            <div class="notification-icon">
-                <img src="https://via.placeholder.com/20" alt="Notification Bell" />
-            </div>
+            <div class="profile-pic"></div>
         </div>
     </div>
 
@@ -195,23 +188,30 @@
                 <a href="@Url.Action("AddDeal", "SecretDeal")" class="btn btn-primary">Add Secret Deal</a>
             </div>
 
-            @foreach (var secretDeal in Model)
+            @if (!Model.Any())
             {
-                <div class="deal-card">
-                    <div class="d-flex align-items-center">
-                        <img src="@secretDeal.BusinessImage" alt="@secretDeal.BusinessName">
-                        <div class="deal-details">
-                            <h2 class="h5 mb-1">@secretDeal.BusinessName</h2>
-                            <p class="mb-0">@secretDeal.Title</p>
-                            <p class="mb-0">@secretDeal.Description</p>
-                            <p class="mb-0">@secretDeal.StartDate.ToString("yyyy-MM-dd") - @secretDeal.EndDate.ToString("yyyy-MM-dd")</p>
-                            <p class="mb-0">Streak Claimed: @secretDeal.StreakClaimed</p>
+                <p>No secret deals available.</p>
+            }
+            else
+            {
+                @foreach (var secretDeal in Model)
+                {
+                    <div class="deal-card">
+                        <div class="d-flex align-items-center">
+                            <img src="@secretDeal.BusinessImage" alt="@secretDeal.BusinessName">
+                            <div class="deal-details">
+                                <h2 class="h5 mb-1">@secretDeal.BusinessName</h2>
+                                <p class="mb-0">@secretDeal.Title</p>
+                                <p class="mb-0">@secretDeal.Description</p>
+                                <p class="mb-0">@secretDeal.StartDate.ToString("yyyy-MM-dd") - @secretDeal.EndDate.ToString("yyyy-MM-dd")</p>
+                                <p class="mb-0">Streak Claimed: @secretDeal.StreakClaimed</p>
+                            </div>
+                        </div>
+                        <div class="deal-actions">
+                            <a href="@Url.Action("EditDeal", "SecretDeal", new { id = secretDeal.Id })" class="btn btn-secondary">Edit</a>
                         </div>
                     </div>
-                    <div class="deal-actions">
-                        <a href="@Url.Action("EditDeal", "SecretDeal", new { id = secretDeal.Id })" class="btn btn-secondary">Edit</a>
-                    </div>
-                </div>
+                }
             }
         </div>
     </div>
