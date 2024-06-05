@@ -52,6 +52,7 @@ namespace StreakyAPi.Controllers
                 request.Email,
                 request.Password,
                 gender.Id,
+                 request.Name,
                 request.CategoryIds,
                 _context,
                 request.IsAdmin
