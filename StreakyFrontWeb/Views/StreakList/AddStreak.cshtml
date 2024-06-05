@@ -1,5 +1,4 @@
 ﻿@model StreakyAPi.Model.Request.StreakRequest
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +12,7 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
+            background: linear-gradient(135deg, #b69ced, #b49cc5, #89709d);
             color: white;
         }
 
@@ -102,53 +101,70 @@
         }
 
         .content {
-            background: #240046;
+            background: white;
             border-radius: 16px;
             padding: 40px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #240046;
         }
 
         .form-group label {
             font-weight: bold;
-            color: white;
+            color: #240046;
         }
 
         .form-control {
             margin-bottom: 10px;
             border-radius: 8px;
+            color: #240046;
         }
 
         .btn-primary {
             background-color: #4A148C;
             border: none;
             border-radius: 8px;
+            color: white;
         }
 
             .btn-primary:hover {
                 background-color: #380a62;
             }
 
-        .btn-secondary {
-            border: 1px solid #4A148C;
-            color: #4A148C;
-            border-radius: 8px;
-        }
-
-            .btn-secondary:hover {
-                background-color: #f0f2f5;
-            }
-
         .button-group {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
         }
 
         .header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: #4A148C;
+            text-decoration: none;
+            margin-right: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+            .back-button:hover {
+                text-decoration: none;
+            }
+
+            .back-button svg {
+                width: 40px; /* Increased size */
+                height: 40px;
+                stroke-width: 2;
+                color: white;
+                background-color: #4A148C;
+                border-radius: 50%;
+                padding: 4px;
+            }
     </style>
 </head>
 <body>
@@ -162,7 +178,6 @@
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
 
-
     <div class="topbar">
         <div class="profile-info">
             <div class="profile-pic"></div>
@@ -173,8 +188,16 @@
 
     <div class="container">
         <div class="content">
-            <h1>Add Streak</h1>
-            <form asp-action="AddStreak" asp-controller="StreakList" method="post">
+            <div class="header">
+                <a href="@Url.Action("StreakList", "StreakList")" class="back-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0z" />
+                        <path fill-rule="evenodd" d="M8.354 11.354a.5.5 0 0 0 0-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1H5.707l2.647-2.646a.5.5 0 0 0-.708-.708l-3.5 3.5a.5.5 0 0 0 .708 0z" />
+                    </svg>
+                </a>
+                <h1>Add Streak</h1>
+            </div>
+            <form method="post" asp-action="AddStreak" asp-controller="StreakList">
                 <div class="form-group">
                     <label for="Title">Title</label>
                     <input type="text" class="form-control" id="Title" name="Title" required />
@@ -182,6 +205,14 @@
                 <div class="form-group">
                     <label for="Description">Description</label>
                     <input type="text" class="form-control" id="Description" name="Description" required />
+                </div>
+                <div class="form-group">
+                    <label for="StartDate">Start Date</label>
+                    <input type="date" class="form-control" id="StartDate" name="StartDate" required />
+                </div>
+                <div class="form-group">
+                    <label for="EndDate">End Date</label>
+                    <input type="date" class="form-control" id="EndDate" name="EndDate" required />
                 </div>
                 <div class="form-group">
                     <label for="BusinessIds">Businesses</label>
@@ -192,18 +223,10 @@
                         }
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="StartDate">Start Date</label>
-                    <input type="date" class="form-control" id="StartDate" name="StartDate" required />
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
-                <div class="form-group">
-                    <label for="EndDate">End Date</label>
-                    <input type="date" class="form-control" id="EndDate" name="EndDate" required />
-                </div>
-                <div class="form-group button-group">
-                    <button type="submit" class="btn btn-primary">Add Streak</button>
-                    <a href="@Url.Action("StreakList", "StreakList")" class="btn btn-secondary">Cancel</a>
-                </div>
+                @Html.AntiForgeryToken()
             </form>
         </div>
     </div>
