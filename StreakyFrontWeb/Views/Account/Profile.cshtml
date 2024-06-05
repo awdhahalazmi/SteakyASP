@@ -1,8 +1,3 @@
-@model StreakyAPi.Model.Reponses.ProfileResponse
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Profile Page";
-}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +10,7 @@
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
+            background: linear-gradient(135deg, #b69ced, #b49cc5, #89709d);
             color: white;
         }
 
@@ -26,7 +21,8 @@
             top: 0;
             left: 0;
             background: #240046;
-            padding-top: 60px;
+            padding-top: 20px;
+            overflow-y: auto;
         }
 
             .sidebar img {
@@ -38,12 +34,15 @@
             .sidebar a {
                 display: block;
                 padding: 10px 20px;
-                color: white;
+                color: #ffccff;
                 text-decoration: none;
+                transition: background 0.3s ease;
             }
 
-                .sidebar a:hover, .sidebar .active {
-                    background: #4a148c;
+                .sidebar a:hover,
+                .sidebar .active {
+                    background: #4A148C;
+                    color: white;
                 }
 
         .topbar {
@@ -66,8 +65,8 @@
             }
 
                 .topbar .profile-info .profile-pic {
-                    width: 50px;
-                    height: 50px;
+                    width: 40px;
+                    height: 40px;
                     border-radius: 50%;
                     background-color: #e0dce3;
                     margin-right: 10px;
@@ -79,7 +78,6 @@
                 .topbar .profile-info span {
                     font-size: 16px;
                     color: white;
-                    margin-right: 5px;
                 }
 
         .container {
@@ -87,34 +85,46 @@
             margin-left: 250px;
             padding: 20px;
             padding-top: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 80px);
         }
 
         .profile {
             width: 100%;
-            padding: 40px;
-            background: #240046;
+            max-width: 1400px; /* Increased size */
+            padding: 80px; /* Increased padding */
+            background: white;
             border-radius: 16px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #240046;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
         }
 
         .profile-header {
-            display: flex;
-            justify-content: space-between;
             width: 100%;
-            align-items: center;
-        }
-
-        .profile-info {
             display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info-center {
+            display: flex;
+            flex-direction: column;
             align-items: center;
         }
 
-        .profile-pic {
+        .profile-pic-center {
             width: 150px;
             height: 150px;
-            border-radius: 8px;
+            border-radius: 50%;
             background-color: #e0dce3;
-            margin-right: 20px;
+            margin-bottom: 20px;
             background-image: url('@Model.ImagePath');
             background-size: cover;
             background-position: center;
@@ -123,6 +133,7 @@
         .profile-details {
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
 
             .profile-details h2 {
@@ -133,18 +144,22 @@
 
             .profile-details span {
                 font-size: 18px;
-                color: #ffccff;
+                color: #555;
             }
 
         .edit-link {
-            align-self: flex-start;
-            color: white;
-            text-decoration: underline;
+            color: #4A148C;
+            font-weight: bold;
             cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
             .edit-link:hover {
-                text-decoration: underline;
+                color: #4A148C;
             }
 
         .profile-body {
@@ -155,26 +170,31 @@
             .profile-body .info-group {
                 display: flex;
                 flex-direction: column;
-                margin-bottom: 10px;
+                margin-bottom: 20px;
+                align-items: center;
             }
 
                 .profile-body .info-group label {
-                    font-size: 18px;
-                    color: white;
+                    font-size: 16px;
+                    color: #240046;
+                    margin-bottom: 5px;
                 }
 
                 .profile-body .info-group input {
                     padding: 10px;
-                    font-size: 16px;
-                    margin-top: 5px;
+                    font-size: 14px;
                     width: 100%;
                     border: 1px solid #ccc;
                     border-radius: 8px;
+                    color: #240046;
                 }
 
         .btn-primary {
             background-color: #4A148C;
             border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
         }
 
             .btn-primary:hover {
@@ -185,6 +205,8 @@
             background-color: white;
             color: #4A148C;
             border: 1px solid #4A148C;
+            padding: 10px 20px;
+            border-radius: 8px;
         }
 
             .btn-secondary:hover {
@@ -193,10 +215,12 @@
 
         .button-group {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar">
@@ -213,15 +237,14 @@
         <div class="profile-info">
             <div class="profile-pic"></div>
             <span>@Model.Name</span>
-            <span class="dropdown-icon">&#x25BC;</span>
         </div>
     </div>
 
     <div class="container">
         <div class="profile">
             <div class="profile-header">
-                <div class="profile-info">
-                    <div class="profile-pic"></div>
+                <div class="profile-info-center">
+                    <div class="profile-pic-center"></div>
                     <div class="profile-details">
                         <h2>@Model.Name</h2>
                     </div>
@@ -275,5 +298,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>
