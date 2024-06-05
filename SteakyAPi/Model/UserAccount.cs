@@ -27,13 +27,14 @@ namespace StreakyAPi.Model
 
         private UserAccount() { }
 
-        public static UserAccount Create(string email, string password, int genderId, List<int> categoryIds, StreakyContext context, bool isAdmin = false)
+        public static UserAccount Create(string email, string password, int genderId, string name ,List<int> categoryIds, StreakyContext context, bool isAdmin = false)
         {
             var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password, BCrypt.Net.HashType.SHA384);
             var categories = context.Categories.Where(c => categoryIds.Contains(c.Id)).ToList();
             return new UserAccount
             {
                 Email = email,
+                Name = name,
                 Password = hashedPassword,
                 GenderId = genderId,
                 Categories = categories,
