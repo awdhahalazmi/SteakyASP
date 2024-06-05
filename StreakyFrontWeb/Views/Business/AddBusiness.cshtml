@@ -16,19 +16,19 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
-            color: white;
+            background: linear-gradient(135deg, #b69ced, #b49cc5, #89709d);
+            color: #240046;
         }
 
         .form-container {
-            background: #240046;
+            background: white;
             padding: 40px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             margin: 80px 0;
-            margin-left: auto; /* Aligns the form to the right */
-            margin-right: 30px; /* Adjust as needed for spacing */
+            margin-left: auto;
+            margin-right: 30px;
         }
 
         .form-group label {
@@ -63,7 +63,8 @@
 
         .button-group {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+            gap: 10px;
         }
 
         .sidebar {
@@ -75,6 +76,7 @@
             background: #240046;
             padding-top: 20px;
             overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
         }
 
             .sidebar img {
@@ -108,27 +110,12 @@
             left: 250px;
             background: #240046;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding: 0 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added shadow */
             z-index: 1000;
         }
-
-            .topbar .search-bar {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-            }
-
-                .topbar .search-bar input {
-                    width: 80%;
-                    padding: 5px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    background-color: #f8f9fa;
-                    color: #4A148C;
-                }
 
             .topbar .profile-info {
                 display: flex;
@@ -149,19 +136,18 @@
                     margin-right: 5px;
                 }
 
-                .topbar .profile-info .dropdown-icon {
-                    font-size: 12px;
-                    color: #6c757d;
-                }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-                .topbar .profile-info .notification-icon {
-                    position: relative;
-                }
-
-                    .topbar .profile-info .notification-icon img {
-                        width: 20px;
-                        height: 20px;
-                    }
+        .back-link {
+            font-size: 24px;
+            color: #4A148C;
+            cursor: pointer;
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -175,9 +161,6 @@
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
     <div class="topbar">
-        <div class="search-bar">
-            <input type="text" placeholder="Search" />
-        </div>
         <div class="profile-info">
             <div class="profile-pic"></div>
             <span>Admin</span>
@@ -185,7 +168,10 @@
     </div>
     <div class="content">
         <div class="form-container">
-            <h1>@ViewBag.Title</h1>
+            <div class="header">
+                <span class="back-link" onclick="window.history.back();">&#8592;</span>
+                <h1>@ViewBag.Title</h1>
+            </div>
             <form method="post" enctype="multipart/form-data" action="@Url.Action("AddBusiness", "Business")">
                 <div class="form-group">
                     <label for="Name">Business Name</label>
@@ -249,12 +235,10 @@
                 </div>
                 <div class="button-group">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("BusinessList", "Business")'">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
-
     <script>
         function previewImage(event) {
             var reader = new FileReader();
