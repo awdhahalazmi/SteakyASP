@@ -13,18 +13,18 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
-            color: white;
+            background: linear-gradient(135deg, #b69ced, #b49cc5, #89709d);
+            color: #240046;
         }
 
         .form-container {
-            background: #240046;
+            background: white;
             padding: 40px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             margin: 80px 0;
-            margin-left: auto; 
+            margin-left: auto;
             margin-right: 30px;
         }
 
@@ -60,7 +60,8 @@
 
         .button-group {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+            gap: 10px;
         }
 
         .sidebar {
@@ -130,6 +131,7 @@
             .topbar .profile-info {
                 display: flex;
                 align-items: center;
+                margin-left: auto;
             }
 
                 .topbar .profile-info .profile-pic {
@@ -151,19 +153,29 @@
                     color: #6c757d;
                 }
 
-       
-
         .header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .delete-link {
-            color: red;
-            font-weight: bold;
+        .back-link {
+            font-size: 24px;
+            color: #4A148C;
+            cursor: pointer;
+            margin-right: 20px;
         }
+
+        .delete-btn {
+            background-color: #be0d1e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+
+            .delete-btn:hover {
+                background-color: #be0d1e;
+            }
     </style>
 </head>
 <body>
@@ -177,9 +189,6 @@
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
     <div class="topbar">
-        <div class="search-bar">
-            <input type="text" placeholder="Search" />
-        </div>
         <div class="profile-info">
             <div class="profile-pic"></div>
             <span>Admin</span>
@@ -188,8 +197,8 @@
     <div class="content">
         <div class="form-container">
             <div class="header">
+                <span class="back-link" onclick="window.history.back();">&#8592;</span>
                 <h1>Edit Business</h1>
-                <a href="#" class="delete-link" onclick="deleteBusiness(@Model.Id); return false;">Delete</a>
             </div>
             <form method="post" enctype="multipart/form-data" asp-action="EditBusiness" asp-controller="Business">
                 <input type="hidden" name="Id" value="@Model.Id" />
@@ -245,8 +254,8 @@
                     </select>
                 </div>
                 <div class="form-group button-group">
-                    <a href="@Url.Action("BusinessList", "Business")" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn delete-btn" onclick="deleteBusiness(@Model.Id); return false;">Delete</button>
                 </div>
             </form>
         </div>
