@@ -28,6 +28,9 @@ namespace StreakyFrontWeb.Controllers
             {
                 return View(new List<BusinessResponse>());
             }
+
+        
+
             return View(businesses);
         }
 
@@ -177,5 +180,7 @@ namespace StreakyFrontWeb.Controllers
             TempData["Error"] = "Failed to delete business. Please try again.";
             return RedirectToAction(nameof(BusinessList));
         }
+     
+
     }
 }
