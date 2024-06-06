@@ -11,10 +11,8 @@
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            background: #f0f2f5;
-            color: #4A148C;
-            display: flex;
+            background: linear-gradient(135deg, #b69ced, #b49cc5, #89709d);
+            color: #240046;
         }
 
         .sidebar {
@@ -23,8 +21,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: #f0f2f5;
-            padding-top: 60px;
+            background: #240046;
+            padding-top: 20px;
             overflow-y: auto;
         }
 
@@ -32,28 +30,21 @@
                 display: block;
                 margin: 20px auto;
                 width: 150px;
-                height: 150px;
-                border-radius: 50%;
-                background-color: #e0dce3;
-                background-image: url('@Model.ImagePath');
-                background-size: cover;
-                background-position: center;
             }
 
             .sidebar a {
                 display: block;
                 padding: 10px 20px;
-                color: #4A148C;
+                color: #ffccff;
                 text-decoration: none;
+                transition: background 0.3s ease;
             }
 
-                .sidebar a:hover {
-                    background: #e0dce3;
+                .sidebar a:hover,
+                .sidebar .active {
+                    background: #4A148C;
+                    color: white;
                 }
-
-            .sidebar .active {
-                background: #e0dce3;
-            }
 
         .topbar {
             width: calc(100% - 250px);
@@ -61,27 +52,13 @@
             position: fixed;
             top: 0;
             left: 250px;
-            background: white;
+            background: #240046;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
         }
-
-            .topbar .search-bar {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-            }
-
-                .topbar .search-bar input {
-                    width: 80%;
-                    padding: 5px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                }
 
             .topbar .profile-info {
                 display: flex;
@@ -101,54 +78,137 @@
 
                 .topbar .profile-info span {
                     font-size: 16px;
-                    color: #4A148C;
-                    margin-right: 5px;
+                    color: white;
                 }
 
-                .topbar .profile-info .dropdown-icon {
-                    font-size: 12px;
-                    color: #6c757d;
-                }
-
-                .topbar .profile-info .notification-icon {
-                    position: relative;
-                }
-
-                    .topbar .profile-info .notification-icon img {
-                        width: 20px;
-                        height: 20px;
-                    }
-
-        .content {
-            margin-left: 250px;
-            margin-top: 60px;
+        .container {
+            width: calc(100% - 100px);
+            margin-left: 120px;
             padding: 20px;
-            width: calc(100% - 250px);
-            height: calc(100vh - 60px);
-            overflow-y: auto;
+            padding-top: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 80px);
         }
 
-        .form-group label {
+        .profile {
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #240046;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .profile-header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic-center {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #e0dce3;
+            margin-bottom: 20px;
+            background-image: url('@Model.ImagePath');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+            .profile-details h2 {
+                margin: 0;
+                font-size: 24px;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            .profile-details span {
+                font-size: 14px;
+                color: #555;
+            }
+
+        .edit-link {
+            color: #4A148C;
             font-weight: bold;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
-        .form-control {
-            margin-bottom: 10px;
+            .edit-link:hover {
+                color: #4A148C;
+            }
+
+        .profile-body {
+            width: 100%;
+            margin-top: 20px;
         }
+
+            .profile-body .info-group {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 15px;
+                align-items: center;
+            }
+
+                .profile-body .info-group label {
+                    font-size: 14px;
+                    color: #240046;
+                    margin-bottom: 5px;
+                }
+
+                .profile-body .info-group input {
+                    padding: 8px;
+                    font-size: 14px;
+                    width: 100%;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    color: #240046;
+                }
 
         .btn-primary {
-            background-color: #6a1b9a;
+            background-color: #4A148C;
             border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
         }
 
             .btn-primary:hover {
-                background-color: #4a148c;
+                background-color: #380a62;
             }
 
         .btn-secondary {
             background-color: white;
-            color: #6a1b9a;
-            border: 1px solid #6a1b9a;
+            color: #4A148C;
+            border: 1px solid #4A148C;
+            padding: 8px 16px;
+            border-radius: 8px;
         }
 
             .btn-secondary:hover {
@@ -157,16 +217,8 @@
 
         .button-group {
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -181,7 +233,6 @@
         <a href="@Url.Action("Logout", "Account")">Logout</a>
     </div>
 
-
     <div class="topbar">
         <div class="search-bar">
             <input type="text" placeholder="Search" />
@@ -193,23 +244,62 @@
         </div>
     </div>
     <div class="content">
-        <div class="header">
-            <h1>Edit Profile</h1>
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-info-center">
+                    <div class="profile-pic-center"></div>
+                    <div class="profile-details">
+                        <h2>@Model.Name</h2>
+                        <span>@Model.Email</span>
+                    </div>
+                </div>
+                <a class="edit-link" onclick="toggleEditForm()">Edit</a>
+            </div>
+            <div class="profile-body">
+                <form id="editForm" method="post" action="@Url.Action("UpdateProfile", "Account")" enctype="multipart/form-data" style="display:none;">
+                    <div class="info-group">
+                        <label for="Name">Name</label>
+                        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
+                    </div>
+                    <div class="info-group">
+                        <label for="Image">Profile Picture</label>
+                        <input type="file" id="Image" name="Image" class="form-control" />
+                    </div>
+                    <div class="info-group">
+                        <label for="Email">Email</label>
+                        <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" required />
+                    </div>
+                    <div class="button-group">
+                        <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+                <div id="profileInfo">
+                    <div class="info-group">
+                        <label>Name:</label>
+                        <span>@Model.Name</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Email:</label>
+                        <span>@Model.Email</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <form id="editForm" method="post" action="@Url.Action("UpdateProfile", "Account")" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="Name">Name</label>
-                <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
-            </div>
-            <div class="form-group">
-                <label for="Image">Profile Picture</label>
-                <input type="file" class="form-control" id="Image" name="Image" />
-            </div>
-            <div class="form-group button-group">
-                <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
     </div>
+
+    <script>
+        function toggleEditForm() {
+            var editForm = document.getElementById('editForm');
+            var profileInfo = document.getElementById('profileInfo');
+            if (editForm.style.display === 'none') {
+                editForm.style.display = 'block';
+                profileInfo.style.display = 'none';
+            } else {
+                editForm.style.display = 'none';
+                profileInfo.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

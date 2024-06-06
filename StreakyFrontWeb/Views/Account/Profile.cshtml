@@ -10,9 +10,8 @@
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            background: linear-gradient(135deg, #6a1b9a, #8e24aa, #ccc);
-
-            color: white;
+            background: linear-gradient(135deg, #b69ced, #b49cc5, #89709d);
+            color: #240046;
         }
 
         .sidebar {
@@ -82,8 +81,8 @@
                 }
 
         .container {
-            width: calc(100% - 250px);
-            margin-left: 250px;
+            width: calc(100% - 100px);
+            margin-left: 120px;
             padding: 20px;
             padding-top: 80px;
             display: flex;
@@ -94,8 +93,8 @@
 
         .profile {
             width: 100%;
-            max-width: 1400px; /* Increased size */
-            padding: 80px; /* Increased padding */
+            max-width: 600px;
+            padding: 40px;
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -121,8 +120,8 @@
         }
 
         .profile-pic-center {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background-color: #e0dce3;
             margin-bottom: 20px;
@@ -135,16 +134,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
         }
 
             .profile-details h2 {
                 margin: 0;
-                font-size: 32px;
+                font-size: 24px;
                 font-family: 'Poppins', sans-serif;
             }
 
             .profile-details span {
-                font-size: 18px;
+                font-size: 14px;
                 color: #555;
             }
 
@@ -171,18 +171,18 @@
             .profile-body .info-group {
                 display: flex;
                 flex-direction: column;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
                 align-items: center;
             }
 
                 .profile-body .info-group label {
-                    font-size: 16px;
+                    font-size: 14px;
                     color: #240046;
                     margin-bottom: 5px;
                 }
 
                 .profile-body .info-group input {
-                    padding: 10px;
+                    padding: 8px;
                     font-size: 14px;
                     width: 100%;
                     border: 1px solid #ccc;
@@ -193,7 +193,7 @@
         .btn-primary {
             background-color: #4A148C;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
             color: white;
         }
@@ -206,7 +206,7 @@
             background-color: white;
             color: #4A148C;
             border: 1px solid #4A148C;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
         }
 
@@ -248,6 +248,7 @@
                     <div class="profile-pic-center"></div>
                     <div class="profile-details">
                         <h2>@Model.Name</h2>
+                        <span>@Model.Email</span>
                     </div>
                 </div>
                 <a class="edit-link" onclick="toggleEditForm()">Edit</a>
@@ -299,5 +300,4 @@
         }
     </script>
 </body>
-
 </html>
